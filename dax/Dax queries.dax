@@ -1,0 +1,14 @@
+Forecast = 
+VAR __Year = 'Table_Rainfall'[Year]
+VAR __Rainfall = 'Table_Rainfall'[Rainfall]
+VAR __Filter = FILTER('Table_Rainfall', 'Table_Rainfall'[Year] >= __Year-4 && 'Table_Rainfall'[Year] < __Year)
+VAR __Forecast = AVERAGEX(__Filter,[Rainfall])
+VAR __Clear = IF([Moved] = BLANK() , BLANK(),__Forecast)
+RETURN
+    __Clear
+
+
+Correction = 
+VAR __Correction = IF( Table_Rainfall[Rainfall] = BLANK() && Table_Rainfall[Year] <> MAX('Table_Rainfall'[Year]), 'Table_Rainfall'[Forecast], 'Table_Rainfall'[Rainfall])
+RETURN
+    __Correction
