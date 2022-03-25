@@ -1,14 +1,26 @@
-Forecast = 
+
+Rainfall_Add_Forecast = 
+/*1 field*/
 VAR __Year = 'Table_Rainfall'[Year]
 VAR __Rainfall = 'Table_Rainfall'[Rainfall]
-VAR __Filter = FILTER('Table_Rainfall', 'Table_Rainfall'[Year] >= __Year-4 && 'Table_Rainfall'[Year] < __Year)
-VAR __Forecast = AVERAGEX(__Filter,[Rainfall])
-VAR __Clear = IF([Moved] = BLANK() , BLANK(),__Forecast)
-RETURN
-    __Clear
-
-
-Correction = 
-VAR __Correction = IF( Table_Rainfall[Rainfall] = BLANK() && Table_Rainfall[Year] <> MAX('Table_Rainfall'[Year]), 'Table_Rainfall'[Forecast], 'Table_Rainfall'[Rainfall])
+VAR __Filter = FILTER('Table_Rainfall', 'Table_Rainfall'[Year] >= __Year-4 && 'Table_Rainfall'[Year] < __Year) --робимо фільтр, щоб для кожного значення фільтрувалися 4 попередні роки
+VAR __Forecast = AVERAGEX(__Filter,[Rainfall]) --розраховуємо середнє значення за 4 останні роки для кожної комірки
+VAR __Correction = IF('Table_Rainfall'[Rainfall] = BLANK() && 'Table_Rainfall'[Year] <> MAX('Table_Rainfall'[Year]), __Forecast, 'Table_Rainfall'[Rainfall]) -- коригуємо опади, додаючи прогноз за передостанній рік
 RETURN
     __Correction
+
+
+Forecast = 
+-- 2 field
+VAR __MinYear = MIN('Table_Rainfall'[Year])
+VAR __Number = 4
+VAR __Year = 'Table_Rainfall'[Year]
+VAR __Rainfall = 'Table_Rainfall'[Rainfall_Add_Forecast]
+VAR __Filter = FILTER('Table_Rainfall', 'Table_Rainfall'[Year] >= __Year-__Number && 'Table_Rainfall'[Year] < __Year) --робимо фільтр, щоб для кожного значення фільтрувалися 4 попередні роки
+VAR __Forecast = AVERAGEX(__Filter,[Rainfall_Add_Forecast]) --розраховуємо середнє значення за 4 останні роки для кожної комірки коригованого прогнозу
+VAR __Correction = IF('Table_Rainfall'[Year]< __MinYear+__Number, BLANK(), __Forecast) -- проноз для всіх років, які виходять за межі ініцюючих перших років
+RETURN
+    __Correction
+
+
+
