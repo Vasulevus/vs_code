@@ -23,4 +23,16 @@ RETURN
     __Correction
 
 
+Стовпець = 
 
+-- work in progress
+VAR __Rainfall = 'Table Rainfall'[Початковий перерахунок]
+VAR __Year_Max = MAX('Table Rainfall'[Year])
+VAR __Year = 'Table Rainfall'[Year]
+VAR __P = CALCULATE(SUM('Table Rainfall'[Початковий перерахунок]), ALL('Table Rainfall'), 'Table Rainfall'[Year] = __Year-1)
+VAR __C = IF(__P = BLANK(), __Rainfall + [_Параметр], 'Table Rainfall'[Початковий перерахунок] = __Rainfall - 1)
+VAR __B = IF(__P <> BLANK(), __P, 'Table Rainfall'[Початковий перерахунок] )
+VAR __S = CALCULATE(SUMX('Table Rainfall','Table Rainfall'[Rainfall]),  'Table Rainfall'[Year] < __Year)
+RETURN
+__S
+    --__Rainfall + [_Параметр](__P - __B)
