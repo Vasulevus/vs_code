@@ -24,15 +24,42 @@ RETURN
 
 
 Стовпець = 
-
--- work in progress
 VAR __Rainfall = 'Table Rainfall'[Початковий перерахунок]
 VAR __Year_Max = MAX('Table Rainfall'[Year])
 VAR __Year = 'Table Rainfall'[Year]
-VAR __P = CALCULATE(SUM('Table Rainfall'[Початковий перерахунок]), ALL('Table Rainfall'), 'Table Rainfall'[Year] = __Year-1)
-VAR __C = IF(__P = BLANK(), __Rainfall + [_Параметр], 'Table Rainfall'[Початковий перерахунок] = __Rainfall - 1)
-VAR __B = IF(__P <> BLANK(), __P, 'Table Rainfall'[Початковий перерахунок] )
-VAR __S = CALCULATE(SUMX('Table Rainfall','Table Rainfall'[Rainfall]),  'Table Rainfall'[Year] < __Year)
+VAR __Filter = FILTER('Table Rainfall', 'Table Rainfall'[Year] = __Year - 1)
+VAR __A = SUMX(__Filter,[Rainfall])
+VAR __B = SUMX(__Filter, [Початковий перерахунок])
+VAR __S = CALCULATE(SUMX('Table Rainfall','Table Rainfall'[Rainfall]), ALL('Table Rainfall'),  'Table Rainfall'[Year] < __Year)
+VAR __Smooth = CALCULATE(SUM('Table Rainfall'[Rainfall]), ALL('Table Rainfall'), 'Table Rainfall'[Year] = __Year-1)
 RETURN
-__S
+__Smooth + [_Параметр]*(__A - __B)
     --__Rainfall + [_Параметр](__P - __B)
+
+
+_InvestimentReturn = 
+    EXP(
+        CALCULATE(
+            SUMX(
+                'Table', 
+                LN(
+                    IF(
+                        'Table'[Index] = 1,
+                        100 * 'Table'[Rate] + 100,
+                        1 + 'Table'[Rate]
+                        )
+                    )
+            ), 
+            FILTER(
+                ALL('Table'[Date]),
+                [Date] <= MAX([Date]))))
+VAR __Year_Max = MAX('Table Rainfall'[Year])
+VAR __Year = 'Table Rainfall'[Year]
+RETURN
+CALCULATE(
+    SUM('Table Rainfall'[Rainfall])
+    FILTER(
+                ALL('Table'[Date]),
+                'Table Rainfall'[Year] <= __Year_Max
+                &&
+                'Table Rainfall'[Year] < __Year - 1)
