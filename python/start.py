@@ -3,6 +3,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+frame = pd.DataFrame(np.arange(12).reshape((4, 3)), index=[['a', 'a', 'b', 'b'], [1, 2, 1, 2]], columns=[['Ohio', 'Ohio', 'Colorado'], ['Green', 'Red', 'Green']])
+frame.index.names = ['Key1', 'Key2']
+frame.columns.names = ['States','Colors']
 #mapping
 # data = pd.DataFrame(np.arange(12).reshape((3, 4)), index=['Ohio', 'Colorado', 'New York'],
 #   columns=['one', 'two', 'three', 'four'])
@@ -20,18 +23,23 @@ import matplotlib.pyplot as plt
 # data = np.random.randn(20)
 # pd.qcut(data,4)
 
-data = pd.DataFrame([[1., 6.5, 3.], [1., np.nan, np.nan],[np.nan, np.nan, np.nan], [np.nan, 6.5, 3.]])
+# data = pd.DataFrame([[1., 6.5, 3.], [1., np.nan, np.nan],[np.nan, np.nan, np.nan], [np.nan, 6.5, 3.]])
 
-# frame = pd.DataFrame(np.random.randn(1000,4))
-# frame.describe()
-# col = frame[2]
-# col[np.abs(col) > 3]
-print(data)
-l = data[2]
-m = pd.Series.mean(l)
-print(m)
-s = data[2].fillna(m)
-print(s)
-print(data)
-data[(np.abs(data) > 3).any(1)]
+# # frame = pd.DataFrame(np.random.randn(1000,4))
+# # frame.describe()
+# # col = frame[2]
+# # col[np.abs(col) > 3]
+# val = 'a,b, guido'
 
+# m = val.split(',')
+
+# '::'.join(m)
+
+frame = pd.DataFrame(np.arange(12).reshape((4, 3)), index=[['a', 'a', 'b', 'b'], [1, 2, 1, 2]], columns=[['Ohio', 'Ohio', 'Colorado'], ['Green', 'Red', 'Green']])
+frame.index.names = ['Key1', 'Key2']
+frame.columns.names = ['States','Colors']
+frame['Ohio']
+
+
+MultiIndex.from_arrays([['Ohio', 'Ohio', 'Colorado'], ['Green', 'Red', 'Green']],
+ names=['state', 'color'])
