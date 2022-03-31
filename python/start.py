@@ -38,8 +38,7 @@ frame.columns.names = ['States','Colors']
 frame = pd.DataFrame(np.arange(12).reshape((4, 3)), index=[['a', 'a', 'b', 'b'], [1, 2, 1, 2]], columns=[['Ohio', 'Ohio', 'Colorado'], ['Green', 'Red', 'Green']])
 frame.index.names = ['Key1', 'Key2']
 frame.columns.names = ['States','Colors']
-frame['Ohio']
+frame.sort_index(level=0)
 
 
-MultiIndex.from_arrays([['Ohio', 'Ohio', 'Colorado'], ['Green', 'Red', 'Green']],
- names=['state', 'color'])
+
