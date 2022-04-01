@@ -35,10 +35,10 @@ frame.columns.names = ['States','Colors']
 
 # '::'.join(m)
 
-frame = pd.DataFrame(np.arange(12).reshape((4, 3)), index=[['a', 'a', 'b', 'b'], [1, 2, 1, 2]], columns=[['Ohio', 'Ohio', 'Colorado'], ['Green', 'Red', 'Green']])
-frame.index.names = ['Key1', 'Key2']
-frame.columns.names = ['States','Colors']
-frame.sort_index(level=0)
-
-
-
+df = pd.DataFrame({'key': ['foo', 'bar', 'baz'], 'A': [1, 2, 3], 'B': [4, 5, 6], 'C': [7, 8, 9]})
+print(df)
+melted = pd.melt(df,'key')
+print(melted)
+repivot = melted.pivot('key', 'variable','value')
+print(repivot)
+repivot.reset_index()
