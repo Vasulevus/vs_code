@@ -3,9 +3,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-frame = pd.DataFrame(np.arange(12).reshape((4, 3)), index=[['a', 'a', 'b', 'b'], [1, 2, 1, 2]], columns=[['Ohio', 'Ohio', 'Colorado'], ['Green', 'Red', 'Green']])
-frame.index.names = ['Key1', 'Key2']
-frame.columns.names = ['States','Colors']
 #mapping
 # data = pd.DataFrame(np.arange(12).reshape((3, 4)), index=['Ohio', 'Colorado', 'New York'],
 #   columns=['one', 'two', 'three', 'four'])
@@ -35,10 +32,21 @@ frame.columns.names = ['States','Colors']
 
 # '::'.join(m)
 
-df = pd.DataFrame({'key': ['foo', 'bar', 'baz'], 'A': [1, 2, 3], 'B': [4, 5, 6], 'C': [7, 8, 9]})
-print(df)
-melted = pd.melt(df,'key')
-print(melted)
-repivot = melted.pivot('key', 'variable','value')
-print(repivot)
-repivot.reset_index()
+data = np.arange(10)
+print(data)
+plt.plot(data)
+fig = plt.plot(data)
+data2 = np.arange(12)
+fig2 = plt.hist(np.random.randn(30))
+fig = plt.figure()
+ax1 = fig.add_subplot(2, 2, 1)
+ax2 = fig.add_subplot(2, 2, 2)
+ax3 = fig.add_subplot(2, 2, 3)
+ax4 = fig.add_subplot(2, 2, 4)
+xline = np.arange(5)
+yline = np.arange(5)
+ax1.hist(np.random.randn(100), bins=20, color='k', alpha=1)
+ax2.scatter(np.arange(30), np.arange(30) + 3 * np.random.randn(30), color = "green")
+ax3.plot(np.random.randn(17), color ='#CECECE') #color = 'red')
+ax4.bar(xline, yline, color = '#456343')
+plt.subplots_adjust(wspace=0.3, hspace=0.3)
