@@ -63,3 +63,71 @@ CALCULATE(
                 'Table Rainfall'[Year] <= __Year_Max
                 &&
                 'Table Rainfall'[Year] < __Year - 1)
+
+
+Conditions = 
+SUM('HR'[Condition 1]) + 
+SUM('HR'[Condition 2]) + 
+SUM('HR'[Condition 3])
+
+
+_Preferences = 
+SUM('HR'[Preference 1]) + 
+SUM('HR'[Preference 2]) + 
+SUM('HR'[Preference 3])
+
+
+_Roles = 
+SUM('HR'[Role 1]) + 
+SUM('HR'[Role 2]) + 
+SUM('HR'[Role 3]) + 
+SUM('HR'[Role 4])
+
+
+_Кількість куплених ліцензій = 
+CALCULATE(
+    COUNT('Dataset'[license_id]),
+    'Dataset'[operation type] = "purchase" --залишаємо виключно куплені ліцензії, без скасувань
+)
+
+
+
+_Кількість діючих ліцензій на певний період часу = 
+VAR __MaxDate = MAX('Dates'[Date])
+VAR __MinDate = MIN('Dates'[Date])
+RETURN
+CALCULATE(
+    COUNT('Dataset'[license_id]),
+    'Dates'[Date] <= __MaxDate
+    &&
+    'Dates'[Date] >= __MinDate
+)
+)
+
+
+
+
+_Кількість діючих ліцензій на певний період часу = 
+VAR __MaxDate = MAX('Dataset'[sale_date])
+VAR __MinDate = MIN('Dataset'[sale_date])
+RETURN
+CALCULATE(
+    COUNT('Dataset'[license_id]),
+    'Dataset'[sale_date] <= __MaxDate
+    &&
+    'Dataset'[sale_date] >= __MinDate
+)
+
+
+
+_Кількість діючих ліцензій на певний період часу = 
+VAR __MaxDate = MAX('Dataset'[sale_date])
+VAR __MinDate = MIN('Dataset'[sale_date])
+RETURN
+CALCULATE(
+    COUNT('Dataset'[license_id]),
+    'Dataset'[sale_date] <= MAX('Dates'[Date])
+    &&
+    'Dataset'[sale_date] >= MIN('Dates'[Date]),
+    FILTER('Dataset','Dataset'[operation_type] = "purchase")
+)
