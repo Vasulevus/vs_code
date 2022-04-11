@@ -1,0 +1,34 @@
+_Активні ліцензії = 
+VAR __Min = MIN('Dates separated'[Date])
+VAR __Max = MAX('Dates separated'[Date])
+VAR __FilterDays = FILTER('Dataset', 'Dataset'[sale_date] <= __Max &&  'Dataset'[End_Of_Period] >= __Min)
+VAR __purchase = FILTER('Dataset','Dataset'[operation_type] = "purchase")
+VAR __Number = CALCULATE( COUNT('Dataset'[license_id] ), __FilterDays, __purchase )
+RETURN
+    __Number
+
+
+_Кількість куплених ліцензій = 
+VAR __Filter =  FILTER('Dataset',   'Dataset'[operation_type] = "purchase" && 'Dataset'[billing_period] <> "trial")
+VAR __Number = CALCULATE( COUNT('Dataset'[license_id]), __Filter)
+RETURN 
+    __Number
+
+
+_мультиплікатор = 0.4
+
+
+_Середній чек = 
+VAR __Check = DIVIDE( [_Сума за місяць], [_Кількість куплених ліцензій])
+RETURN
+    __Check
+
+
+_Сума за місяць = 
+VAR __Filter = FILTER('Dataset', 'Dataset'[operation_type] = "purchase" && 'Dataset'[billing_period] <> "trial")
+VAR __Sum = SUMX(__Filter, [billing_plan_price])
+RETURN  
+    __Sum
+
+
+_Чистий прибуток = [_Сума за місяць] * [_мультиплікатор]
