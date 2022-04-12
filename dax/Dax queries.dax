@@ -100,9 +100,10 @@ CALCULATE(
     COUNT('Dataset'[license_id]),
     'Dates'[Date] <= __MaxDate
     &&
-    'Dates'[Date] >= __MinDate
+    'Dates'[Date] >= __MinDate,
+    FILTER('Dataset','Dataset'[operation_type] = "purchase")
 )
-)
+
 
 
 
@@ -115,7 +116,8 @@ CALCULATE(
     COUNT('Dataset'[license_id]),
     'Dataset'[sale_date] <= __MaxDate
     &&
-    'Dataset'[sale_date] >= __MinDate
+    'Dataset'[sale_date] >= __MinDate,
+        FILTER('Dataset','Dataset'[operation_type] = "purchase")
 )
 
 
@@ -131,3 +133,35 @@ CALCULATE(
     'Dataset'[sale_date] >= MIN('Dates'[Date]),
     FILTER('Dataset','Dataset'[operation_type] = "purchase")
 )
+
+
+Active Contacts :=
+VAR _MaxDate =
+    MAX ( Dates[Date] )
+VAR _MinDate =
+    MIN ( Dates[Date] )
+VAR _StartsBeforeMonthEnd =
+    CALCULATETABLE ( VALUES ('Dataset'[license_id] ), Dates[Date] <= _MaxDate )
+VAR _notEndAfterMonthEnd =
+    CALCULATETABLE (
+        VALUES ('Dataset'[license_id] ),
+        Dates[Date] >= _MinDate
+            || ISBLANK ( Dates[Date] ),
+        USERELATIONSHIP ( Dates[Date],'Dataset'[End Date] )
+    )
+RETURN
+    COUNTROWS ( INTERSECT ( _notEndAfterMonthEnd, _StartsBeforeMonthEnd ) )
+
+_RR = 
+VAR __Min = MIN('Dates separated'[Date])
+VAR __Max = MAX('Dates separated'[Date])
+VAR __Number = 
+    CALCULATE(
+        DISTINCTCOUNT('Дані'[Номер договору],
+        'Дані'[Дата початку] <= __Max &&  'Дані'[Дата end] >= __Min)
+    )
+RETURN
+    __Number
+
+
+'Dataset'[license_id]

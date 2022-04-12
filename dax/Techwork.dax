@@ -32,3 +32,12 @@ RETURN
 
 
 _Чистий прибуток = [_Сума за місяць] * [_мультиплікатор]
+
+
+_% в розподілі = 
+VAR __Filter = FILTER('Час підписки', 'Час підписки'[Тривалість підписки] > 0 )
+VAR __Sum =  SUMX(__Filter,[Тривалість підписки])
+VAR __FullSum = CALCULATE(SUM('Час підписки'[Тривалість підписки]), __Filter, ALL('Час підписки'))
+VAR __Dividing = DIVIDE(__Sum,__FullSum)
+RETURN
+    __Dividing

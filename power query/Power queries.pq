@@ -4,3 +4,5 @@ let
     #"Changed Type" = Table.TransformColumnTypes(Source,{{"Year", Int64.Type}, {"Rainfall", type number}})
 in
     #"Changed Type"
+
+
