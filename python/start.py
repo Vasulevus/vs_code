@@ -1,61 +1,40 @@
 
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as pl
+import random
+import string
 
-#mapping
-# data = pd.DataFrame(np.arange(12).reshape((3, 4)), index=['Ohio', 'Colorado', 'New York'],
-#   columns=['one', 'two', 'three', 'four'])
-# transform = lambda x: x[:4].upper()
-# data.index.map(transform)
-# data.rename(index={'OHIO': 'Kyiv'}, columns={'two': "ends"})
+# def dataset_creator(Name1, Name2, Name3, Name4, Number):
+#     A = []
+#     B = []
+#     letters = string.ascii_lowercase
+#     rand_letters = random.choices(letters,k=Number)
+#     rand_letters2 = random.choices(letters,k=Number)
+#     i = 0
+#     j = 0
+#     for letter in rand_letters:
+#         i = i + 1
+#         A.append(rand_letters[i-1])
+#     for letter in rand_letters2:
+#         j = j + 1
+#         B.append(rand_letters2[j-1])
+#     df = pd.DataFrame({Name1: A, Name2: B, Name3: np.random.randn(Number), Name4: np.round(np.random.normal(1,Number,Number))})
+# dataset_creator("A","B","C","D",10)
 
-
-# ages = [20, 22, 25, 27, 21, 23, 37, 31, 61, 45, 41, 32]
-# bins = [18, 25, 35, 60, 100]
-# group_names = ["young", "elder young", "middleage", "old"]
-# bin_data = pd.cut(ages,bins, labels=group_names)
-# bin_data
-
-# data = np.random.randn(20)
-# pd.qcut(data,4)
-
-# data = pd.DataFrame([[1., 6.5, 3.], [1., np.nan, np.nan],[np.nan, np.nan, np.nan], [np.nan, 6.5, 3.]])
-
-# # frame = pd.DataFrame(np.random.randn(1000,4))
-# # frame.describe()
-# # col = frame[2]
-# # col[np.abs(col) > 3]
-# val = 'a,b, guido'
-
-# m = val.split(',')
-
-# '::'.join(m)
-
-# data = np.arange(10)
-# #print(data)
-# plt.plot(data)
-# fig = plt.plot(data)
-# data2 = np.arange(12)
-# fig2 = plt.hist(np.random.randn(30))
-# fig = plt.figure()
-# ax1 = fig.add_subplot(2, 2, 1)
-# ax2 = fig.add_subplot(2, 2, 2)
-# ax3 = fig.add_subplot(2, 2, 3)
-# ax4 = fig.add_subplot(2, 2, 4)
-# xline = np.arange(5)
-# yline = np.arange(5)
-# ax1.hist(np.random.randn(100), bins=20, color='k', alpha=1)
-# ax2.scatter(np.arange(30), np.arange(30) + 3 * np.random.randn(30), color = "green")
-# ax3.plot(np.random.randn(17), color='k', linestyle='dashed', marker='o') #color = 'red')
-# ax4.bar(xline, yline, color = 'b')
-# plt.subplots_adjust(wspace=0.3, hspace=0.3)
-# data3 = np.random.randn(30).cumsum()
-# a = plt.figure()
-# a = a.add_subplot(2,2,1)
-# a.plot(data3, 'k--', label='Default')
-# a.plot(data3, 'k-', drawstyle='steps-post', label='steps-post')
-# a.legend(loc='best')
-
-df = pd.DataFrame(np.random.randn(9,3), columns = ["A", "B", "C"])
-df.plot()
+A = []
+B = []
+Number = 50
+letters = string.ascii_lowercase
+rand_letters = random.choices(letters,k=Number)
+rand_letters2 = random.choices(letters,k=Number)
+i = 0
+j = 0
+for letter in rand_letters:
+    i = i + 1
+    A.append(rand_letters[i-1])
+for letter in rand_letters2:
+    j = j + 1
+    B.append(rand_letters2[j-1])
+df = pd.DataFrame({"FirstName": A, "SecondName": B, 'data1': np.random.randn(Number), 'data2': np.round(np.random.normal(1,Number,Number))})
+df
