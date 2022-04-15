@@ -1,0 +1,13 @@
+import pandas as pd
+import numpy as np
+
+
+
+# letters = str.ascii_lowercase
+# rand_letters = rn.choices(letters,k=10)
+# print(rand_letters)
+df = pd.DataFrame({'key1':["A", "B", "C", "D", "A", "B", "C", "D", "E"],
+                    'key2': ["four", "five", "six", "seven", "four", "five", "six", "seven", "eight"],
+                    'data1': np.random.randn(9),
+                    'data2': np.round(np.random.normal(1,9,9))})
+df
