@@ -37,4 +37,4 @@ for letter in rand_letters2:
     j = j + 1
     B.append(rand_letters2[j-1])
 df = pd.DataFrame({"FirstName": A, "SecondName": B, 'data1': np.random.randn(Number), 'data2': np.round(np.random.normal(1,Number,Number))})
-df
+df.groupby(["FirstName", "SecondName"]).sum()
