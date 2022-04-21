@@ -1,0 +1,35 @@
+{
+  "name": "SemanticModel",
+  "compatibilityLevel": 1500,
+  "model": {
+    "culture": "uk-UA",
+    "dataSources": [
+      {
+        "type": "structured",
+        "name": "SQL/DESKTOP-T6OC7TM\\MSSQLVASULEVUS;WideWorldImportersDW",
+        "connectionDetails": {
+          "protocol": "tds",
+          "address": {
+            "server": "DESKTOP-T6OC7TM\\MSSQLVASULEVUS",
+            "database": "WideWorldImportersDW"
+          },
+          "authentication": null,
+          "query": null
+        },
+        "options": {},
+        "credential": {
+          "AuthenticationKind": "UsernamePassword",
+          "Username": "OlexVas",
+          "EncryptConnection": false
+        }
+      }
+    ],
+    "annotations": [
+      {
+        "name": "ClientCompatibilityLevel",
+        "value": "600"
+      }
+    ]
+  },
+  "id": "SemanticModel"
+}
