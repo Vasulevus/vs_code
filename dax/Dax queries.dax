@@ -165,3 +165,38 @@ RETURN
 
 
 'Dataset'[license_id]
+
+
+Brand Color Sales by Buying Group =
+
+VAR __T1 = 
+    SUMMARIZE(
+    'Dimension Customer',
+    'Dimension Customer'[Buying Group])
+VAR __T2 =
+    SUMMARIZE(
+    'Dimension Stock Item', 
+    'Dimension Stock Item'[Brand],
+    'Dimension Stock Item'[Color],
+    "Dimension Stock Item Brand Color Breakdown",
+    SUMX(
+        RELATEDTABLE('Fact Sale'),
+    'Fact Sale'[Quantity]
+    )
+)
+VAR __Generated =
+    GENERATE(
+        __T1,
+        __T2
+    )
+RETURN
+    __Generated
+
+
+% of Red Items:= 
+    DIVIDE(
+        SUM('Fact Sale'[Red Items]),
+        CALCULATE(
+            SUM('Fact Sale'[Quantity]),
+            FILTER('Fact Sale',RELATED('Dimension Stock Item'[Color])<>"N/A")
+            )

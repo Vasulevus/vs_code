@@ -1,52 +1,226 @@
-/*USE Mu;
+USE WideWorldImporters;
+GO
 
-SELECT
-	*
-FROM
-	Subscription;
+CREATE SCHEMA [Cube];
+go
 
-SELECT
-	MONTH(sale_date)
-FROM
-	Subscription;
+--CREATE OR ALTER VIEW [Cube].[City]
+--	AS
+--	SELECT [City Key]
+--      ,[WWI City ID]
+--      ,[City]
+--      ,[State Province]
+--      ,[Country]
+--      ,[Continent]
+--      ,[Sales Territory]
+--      ,[Region]
+--      ,[Subregion]
+--      ,[Location]
+--      ,[Latest Recorded Population]
+--      ,[Valid From]
+--      ,[Valid To]
+--	  ,CASE WHEN [Valid To] > '9999-01-01' THEN 1 ELSE 0 END AS [Current]
+--      ,[Lineage Key]
+--  FROM [Dimension].[City]
+--  ;
+--  GO
 
-SELECT 
-	CAST(MONTH(sale_date) AS VARCHAR(2)) + '-' + CAST(YEAR(sale_date) AS VARCHAR(4))
-FROM
-	Subscription;
+--  CREATE OR ALTER VIEW [Cube].[Customer]
+--AS
+--SELECT [Customer Key]
+--      ,[WWI Customer ID]
+--      ,[Customer]
+--      ,[Bill To Customer]
+--      ,[Category]
+--      ,[Buying Group]
+--      ,[Primary Contact]
+--      ,[Postal Code]
+--      ,[Valid From]
+--      ,[Valid To]
+--	  ,CASE WHEN [Valid To] > '9999-01-01' THEN 1 ELSE 0 END AS [Current]
+--      ,[Lineage Key]
+--  FROM [Dimension].[Customer]
+--GO
+
+--  CREATE OR ALTER VIEW [Cube].[City - Current]
+--	AS
+--	SELECT [City Key]
+--      ,[WWI City ID]
+--      ,[City]
+--      ,[State Province]
+--      ,[Country]
+--      ,[Continent]
+--      ,[Sales Territory]
+--      ,[Region]
+--      ,[Subregion]
+--      ,[Location]
+--      ,[Latest Recorded Population]
+--      ,[Valid From]
+--      ,[Valid To]
+--	  ,CASE WHEN [Valid To] > '9999-01-01' THEN 1 ELSE 0 END AS [Current]
+--      ,[Lineage Key]
+--  FROM [Dimension].[City]
+--  WHERE [Valid To] > '9999-01-01'
+--  ;
+
+--CREATE OR ALTER VIEW [Cube].[Date]
+--AS
+--SELECT [Date]
+--      ,[Day Number]
+--      ,[Day]
+--      ,[Month]
+--      ,[Short Month]
+--      ,[Calendar Month Number]
+--      ,[Calendar Month Label]
+--      ,[Calendar Year]
+--      ,[Calendar Year Label]
+--      ,[Fiscal Month Number]
+--      ,[Fiscal Month Label]
+--      ,[Fiscal Year]
+--      ,[Fiscal Year Label]
+--      ,[ISO Week Number]
+--  FROM [Dimension].[Date]
+--GO
 
 
-SELECT 
-	license_name as L_Type,
-	CAST(YEAR(sale_date) AS VARCHAR(4)) + '-' + CAST(MONTH(sale_date) AS VARCHAR(2)) AS Year_Month,
-	COUNT(*) partition OVER (license_id) AS [Running Total]
-FROM
-	Subscription
-GROUP BY CAST(YEAR(sale_date) AS VARCHAR(4)) + '-' + CAST(MONTH(sale_date) AS VARCHAR(2)), license_name
-ORDER BY L_Type ASC, Year_Month ASC;
+--CREATE OR ALTER VIEW [Cube].[Item]
+--AS
+--SELECT [Stock Item Key]
+--      ,[WWI Stock Item ID]
+--      ,[Stock Item]
+--      ,[Color]
+--      ,[Selling Package]
+--      ,[Buying Package]
+--      ,[Brand]
+--      ,[Size]
+--      ,[Lead Time Days]
+--      ,[Quantity Per Outer]
+--      ,[Is Chiller Stock]
+--      ,[Barcode]
+--      ,[Tax Rate]
+--      ,[Unit Price]
+--      ,[Recommended Retail Price]
+--      ,[Typical Weight Per Unit]
+--      ,[Valid From]
+--      ,[Valid To]
+--	  ,CASE WHEN [Valid To] > '9999-01-01' THEN 1 ELSE 0 END AS [Current]
+--      ,[Lineage Key]
+--  FROM [Dimension].[Stock Item];
+--GO
 
-*/
+--CREATE OR ALTER VIEW [Cube].[Sales]
+--AS
+--SELECT fs.[Sale Key]
+--      ,fs.[City Key]
+--	  ,dc.[WWI City ID]
+--      ,fs.[Customer Key]
+--	  ,dcu.[WWI Customer ID]
+--      ,fs.[Bill To Customer Key]
+--	  ,dbc.[WWI Customer ID] as [WWI Bill To Customer ID]
+--      ,fs.[Stock Item Key]
+--	  ,dsi.[WWI Stock Item ID]
+--      ,fs.[Invoice Date Key]
+--      ,fs.[Delivery Date Key]
+--      ,fs.[Salesperson Key]
+--	  ,de.[WWI Employee ID]
+--      ,fs.[WWI Invoice ID]
+--      ,fs.[Description]
+--      ,fs.[Package]
+--      ,fs.[Quantity]
+--      ,fs.[Unit Price]
+--      ,fs.[Tax Rate]
+--      ,fs.[Total Excluding Tax]
+--      ,fs.[Tax Amount]
+--      ,fs.[Profit]
+--      ,fs.[Total Including Tax]
+--      ,fs.[Total Dry Items]
+--      ,fs.[Total Chiller Items]
+--	  ,1 as [Sales Count]
+--      ,fs.[Lineage Key]
+--  FROM [Fact].[Sale] fs
+--  INNER JOIN [Dimension].[City] dc ON dc.[City Key] = fs.[City Key]
+--  INNER JOIN [Dimension].[Customer] dcu ON dcu.[Customer Key] = fs.[Customer Key]
+--  INNER JOIN [Dimension].[Customer] dbc ON dbc.[Customer Key] = fs.[Bill To Customer Key]
+--  INNER JOIN [Dimension].[Stock Item] dsi ON dsi.[Stock Item Key] = fs.[Stock Item Key]
+--  INNER JOIN [Dimension].[Employee] de ON de.[Employee Key] = fs.[Salesperson Key]
+--  ;
+--GO
+--CREATE OR ALTER VIEW [Cube].[Invoice Sales]
+--AS
+--SELECT fs.[WWI Invoice ID]
+--      ,fs.[City Key]
+--	  ,dc.[WWI City ID]
+--      ,fs.[Customer Key]
+--	  ,dcu.[WWI Customer ID]
+--      ,fs.[Bill To Customer Key]
+--	  ,dbc.[WWI Customer ID] AS [WWI Bill To Customer ID]
+--      ,fs.[Invoice Date Key]
+--      ,fs.[Salesperson Key]
+--	  ,de.[WWI Employee ID]
+--      ,SUM(fs.[Total Excluding Tax]) AS [Invoice Total Excluding Tax]
+--      ,SUM(fs.[Tax Amount]) AS [Invoice Tax Amount]
+--      ,SUM(fs.[Profit]) AS [Invoice Profit]
+--      ,SUM(fs.[Total Including Tax]) AS [Invoice Total Including Tax]
+--      ,SUM(fs.[Total Dry Items]) AS [Invoice Total Dry Items]
+--      ,SUM(fs.[Total Chiller Items]) AS [Invoice Total Chiller Items]
+--	  ,1 AS [Invoice Count]
+--	  ,COUNT([Sale Key]) AS [Sales Count]
+--  FROM [Fact].[Sale] fs
+--  INNER JOIN [Dimension].[City] dc ON dc.[City Key] = fs.[City Key]
+--  INNER JOIN [Dimension].[Customer] dcu ON dcu.[Customer Key] = fs.[Customer Key]
+--  INNER JOIN [Dimension].[Customer] dbc ON dbc.[Customer Key] = fs.[Bill To Customer Key]
+--  INNER JOIN [Dimension].[Employee] de ON de.[Employee Key] = fs.[Salesperson Key]
+--  GROUP BY
+--  fs.[WWI Invoice ID]
+--      ,fs.[City Key]
+--	  ,dc.[WWI City ID]
+--      ,fs.[Customer Key]
+--	  ,dcu.[WWI Customer ID]
+--      ,fs.[Bill To Customer Key]
+--	  ,dbc.[WWI Customer ID]
+--      ,fs.[Invoice Date Key]
+--      ,fs.[Salesperson Key]
+--	  ,de.[WWI Employee ID]
 
-/*	L_Type,
-	Year_Month,
-	SUM(NUMBER) OVER (PARTITION BY SUM(NUMBER), ORDER BY L_Type) AS RT
-	FROM*/
-
-WITH 
-    CTE_Partition(License, [Year Month], Numberz)
-AS
-( --створюємо CTE для подальшого використання
-    SELECT 
-        license_name,
-        CAST(YEAR(sale_date) AS VARCHAR(4)) + '-' + CAST(MONTH(sale_date) AS VARCHAR(2)) AS Year_Month,
-        COUNT(*) as Numbers
-    FROM
-        Subscription AS Sub
-    GROUP BY CAST(YEAR(sale_date) AS VARCHAR(4)) + '-' + CAST(MONTH(sale_date) AS VARCHAR(2)), license_name
-)
-SELECT
-	License, 
-    [Year Month], --для того, щоб був пробіл у назві, використовуємо квадратні дужки
-    SUM (Numberz) OVER (partition by license order by license, [Year Month]) as [Running Total] --для отримання Running Total використовуємо використовуємо віконну функцію OVER
-FROM
-	CTE_Partition
+--GO
+--CREATE OR ALTER VIEW [Cube].[Invoice]
+--AS
+--SELECT fs.[WWI Invoice ID]
+--      ,fs.[Invoice Date Key]
+--  FROM [Fact].[Sale] fs
+--  GROUP BY
+--  fs.[WWI Invoice ID]
+--      ,fs.[Invoice Date Key]
+--; 
+--GO
+--CREATE OR ALTER VIEW [Cube].[Salesperson]
+--AS
+--SELECT [Employee Key]
+--      ,[WWI Employee ID]
+--      ,[Employee]
+--      ,[Preferred Name]
+--	  ,SUBSTRING([Employee],CHARINDEX(' ', [Employee])+1, LEN([Employee])) AS [Last Name]
+--	  ,SUBSTRING([Employee],1,CHARINDEX(' ', [Employee])) AS [First Name]
+--      ,[Valid From]
+--      ,[Valid To]
+--	  ,CASE WHEN [Valid To] > '9999-01-01' THEN 1 ELSE 0 END AS [Current]
+--      ,[Lineage Key]
+--  FROM [Dimension].[Employee]
+--  WHERE [Is Salesperson] = 1;
+--GO
+--CREATE OR ALTER VIEW [Cube].[Salesperson-Current]
+--AS
+--SELECT [Employee Key]
+--      ,[WWI Employee ID]
+--      ,[Employee]
+--      ,[Preferred Name]
+--	  ,SUBSTRING([Employee],CHARINDEX(' ', [Employee])+1, LEN([Employee])) AS [Last Name]
+--	  ,SUBSTRING([Employee],1,CHARINDEX(' ', [Employee])) AS [First Name]
+--      ,[Valid From]
+--      ,[Valid To]
+--	  ,CASE WHEN [Valid To] > '9999-01-01' THEN 1 ELSE 0 END AS [Current]
+--      ,[Lineage Key]
+--  FROM [Dimension].[Employee]
+--  WHERE [Is Salesperson] = 1
+--    AND [Valid To] > '9999-01-01';
+--GO
