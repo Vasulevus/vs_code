@@ -4,7 +4,7 @@ import pypyodbc as odbc
 
 CSV_file = pandas.read_csv('../csv/Logins.csv')
 df = pandas.DataFrame(CSV_file)
-
+print(df)
 
 
 DRIVER = 'SQL Server'
@@ -26,12 +26,32 @@ connStr = (
     r'UID=etl3;'
     r'PWD=demopassQ;'
     )
-db = odbc.connect(connStr)
-cursor = db.cursor()
-insert_statement = """
-    INSERT INTO Grim_B(DATE,USERS,Login,Password,Number)
-    VALUES (?, ?, ?, ?, ?)
-"""
+
+cursor = connStr.cursor()
+cursor.execute('''
+		CREATE TABLE products (
+			product_id int primary key,
+			product_name nvarchar(50),
+			price int
+			)
+               ''')
+
+
+for row in df.itertuples():
+    cursor.execute('''
+                INSERT INTO products (product_id, product_name, price)
+                VALUES (?,?,?)
+                ''',
+                row.product_id, 
+                row.product_name,
+                row.price
+                )
+conn.commit()
+# db = odbc.connect(connStr)
+# cursor = db.cursor()
+# insert_statement = """
+#     INSERT INTO Grim_B(DATE,USERS,Login,Password,Number)
+#     VALUES (?, ?, ?, ?, ?)"""
 
 
 
@@ -64,19 +84,19 @@ insert_statement = """
 #      if db.connected == 1:
 #          db.close()
 
-try:
-     for record in records:
-         print(record)
-         cursor.execute(insert_statement, record)        
-except Exception as e:
-     cursor.rollback()
-     print(e.value)
-     print('transaction rolled back')
-else:
-     print('records inserted successfully')
-     cursor.commit()
-     cursor.close()
-finally:
-     if db.connected == 1:
-         print('connection closed')
-         db.close()
+# try:
+#      for record in CSV_file:
+#          print(record)
+#          cursor.execute(insert_statement, record)        
+# except Exception as e:
+#      cursor.rollback()
+#      print(e.value)
+#      print('transaction rolled back')
+# else:
+#      print('records inserted successfully')
+#      cursor.commit()
+#      cursor.close()
+# finally:
+#      if db.connected == 1:
+#          print('connection closed')
+#          db.close()
