@@ -47,3 +47,32 @@ let
     #"Keep columns and order" = Table.SelectColumns(#"Changed Type For Date",{"Макет", "Код підприємства", "Date", "Види податків та платежів", "Код рядка", "Перевірка", "Attribute", "Value"})
 in
     #"Keep columns and order"
+
+
+//for cycle
+let
+    Source = Folder.Files("C:\Users\Vasulevus\Documents\Work\Test"),
+    #"Filtered Hidden Files1" = Table.SelectRows(Source, each [Attributes]?[Hidden]? <> true),
+    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File", each #"Transform File"([Content])),
+    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File"}),
+    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File", Table.ColumnNames(#"Transform File"(#"Sample File"))),
+    #"Filtered not structured rows" = Table.SelectRows(#"Expanded Table Column1", each ([Column1] <> null and [Column1] <> "      у тому числі:" and [Column1] <> "))" and [Column1] <> "*  - Без  урахування невідшкодованих виплат ліквідаторам аварії на ЧАЕС, малозабезпеченим сім'ям та інвалідам І - ІІ гр." and [Column1] <> "_________________ПАТ ""ДТЕК Західенерго""__________________________________" and [Column1] <> "Види податків та платежів" and [Column1] <> "Довідка" and [Column1] <> "за __січень______ місяці(в)  __2018____ року" and [Column1] <> "місячна, до 25-го  числа кожного місяця , наростаючою сумою з початку року" and [Column1] <> "назва підприємства" and [Column1] <> "про стан розрахунків з бюджетами та позабюджетними фондами" and [Column1] <> "тис.грн (в цілих одиницях)")),     
+    #"Filtered company names and year" = Table.SelectRows(#"Filtered not structured rows", each not Text.Contains([Column1], "ПАТ") and not Text.Contains([Column1], "року")),
+    #"Split Column by Delimiter" = Table.SplitColumn(#"Filtered company names and year", "Source.Name", Splitter.SplitTextByDelimiter(".", QuoteStyle.Csv), {"Source.Name1", "Source.Name2"}),
+    #"Promoted Headers" = Table.PromoteHeaders(#"Split Column by Delimiter", [PromoteAllScalars=true]),
+    #"Rename_Take code after this" = Table.RenameColumns(#"Promoted Headers",{{"Column16", "Column14"}}),     
+    #"Changed Type in clear table" = Table.TransformColumnTypes(#"Rename_Take code after this",{{"А", type text}, {"Б", Int64.Type}, {"1", Int64.Type}, {"2", Int64.Type}, {"3", Int64.Type}, {"4", Int64.Type}, {"5", Int64.Type}, {"6", Int64.Type}, {"7", Int64.Type}, {"8", Int64.Type}, {"9", Int64.Type}, {"10", Int64.Type}, {"11", Int64.Type}, {"Column14", type text}}),     
+    #"Renamed Columns from table" = Table.RenameColumns(#"Changed Type in clear table",{{"А", "Види податків та платежів"}, {"Б", "Код рядка"}, {"1", "Заборгованість на початок року перед бюджетом"}, {"2", "у т.ч. недоїмка"}, {"3", "бюджета перед підприємством"}, {"4", "Нараховано (всього)"}, {"5", "Сплачено всього"}, {"6", "У тому числі грошовими коштами"}, {"7", "по постановам КМУ"}, {"8", "Заборгованість на кінець звітного періоду  перед бюджетом"}, {"9", "у т.ч. недоїмка на кінець звітного періоду"}, {"10", "бюджета перед підприємством на кінець звітного періоду"}, {"11", "Довідково з гр.4 нарахов.до сплати розстроч. заборгованості"}, {"Column14", "Перевірка"}}),
+    #"Filtered Rows" = Table.SelectRows(#"Renamed Columns from table", each ([Види податків та платежів] <> "А")),     
+    #"Replaced with right name" = Table.ReplaceValue(#"Filtered Rows","((","",Replacer.ReplaceText,{"Види податків та платежів"}),
+    #"Filtered Rows with Company Names" = Table.SelectRows(#"Replaced with right name", each ([Види податків та платежів] <> "____ ПрАТ ""Дніпровська ТЕЦ""____" and [Види податків та платежів] <> "__________________________________________________________________" and [Види податків та платежів] <> "_________________________________________ПрАТ Миколаївська ТЕЦ_________________________" and [Види податків та платежів] <> "____________________________________ПрАТ ""Херсонська ТЕЦ""__________________________________" and [Види податків та платежів] <> "_ПрАТ ""Укргідроенерго""" and [Види податків та платежів] <> "АК ""Харківобленерго""" and [Види податків та платежів] <> "ВАТ ""Тернопільобленерго""" and [Види податків та платежів] <> "ДП ""Сєвєродонецька ТЕЦ""" and [Види податків та платежів] <> "ПрАТ ""Волиньобленерго""" and [Види податків та платежів] <> "ПрАТ ""ЕК""Чернівціобленерго""" and [Види податків та платежів] <> "ПрАТ «ХАРКІВСЬКА ТЕЦ-5» " and [Види податків та платежів] <> "Приватне акціонерне товариство  ""Львівобленерго""" and [Види податків та платежів] <> "Публічне акціонерне товариство ""Енергопостачальна компанія Одесаобленерго""")),
+    #"Added File Name Column" = Table.AddColumn(#"Filtered Rows with Company Names", "Назва файлу", each List.First(Table.ColumnNames(#"Filtered Rows with Company Names"))),
+    #"Split File Name by Delimiter" = Table.SplitColumn(#"Added File Name Column", "Назва файлу", Splitter.SplitTextByDelimiter("_", QuoteStyle.Csv), {"Макет", "Код підприємства", "Місяць", "Рік"}),
+    #"Changed Type New Two Columns" = Table.TransformColumnTypes(#"Split File Name by Delimiter",{{"Макет", Int64.Type}, {"Код підприємства", Int64.Type}}),
+    #"Create Date Column" = Table.AddColumn(#"Changed Type New Two Columns", "Date", each "01." & [Місяць] & "." & [Рік]),
+    #"Changed Type For Date" = Table.TransformColumnTypes(#"Create Date Column",{{"Date", type date}}),
+    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type For Date",{"Макет", "Код підприємства", "Date", "Види податків та платежів", "Код рядка", "Перевірка", "Заборгованість на початок року перед бюджетом", "у т.ч. недоїмка", "бюджета перед підприємством", "Нараховано (всього)", "Сплачено всього", "У тому числі грошовими коштами", "по постановам КМУ", "Заборгованість на кінець звітного періоду  перед бюджетом", "у т.ч. недоїмка на кінець звітного періоду", "бюджета перед підприємством на кінець звітного періоду", "Довідково з гр.4 нарахов.до сплати розстроч. заборгованості" }),
+    #"Unpivoted Other Columns" = Table.UnpivotOtherColumns(#"Removed Other Columns", {"Макет", "Код підприємства", "Date", "Види податків та платежів", "Код рядка", "Перевірка"}, "Attribute", "Value")
+in
+    #"Unpivoted Other Columns"
