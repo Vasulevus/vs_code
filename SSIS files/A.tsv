@@ -1,0 +1,5 @@
+id	name	email	number	datestamp	sum	format
+100	Alex	alex@mine.com	+380971234567	02.06.2022 14:09:20	100	tsv
+200	Mike	rex@mike.com	0965434121	03.06.2022 14:19:20	200	tsv
+300	Jane	smartie@ani.org	80965553344	04.06.2022 14:29:20	300	tsv
+400	Junior	learn@day.it	380971234567	05.06.2022 14:39:20	400	tsv
