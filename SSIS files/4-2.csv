@@ -1,5 +1,5 @@
-id,name,email, number,secret number, datestamp
-9,Jarback,balex@mine.com, +380911234567,123, 07.07.2022 14:09:20
-16,Durack,trex@mike.com,0965433121,654, 08.08.2022 14:00:20
-17,Bascack,martie@ani.org,80965953344,009, 09.08.2022 14:19:21
-18,Rukzack,clearn@day.it,380971434567,907, 15.08.2022 17:39:55
+id,name,email,number,datestamp,sum,format
+9,Jarback,balex@mine.com, +380911234567,07.07.2022 14:09:20,123,csv
+16,Durack,trex@mike.com,0965433121,08.08.2022 14:00:20,654,csv
+17,Bascack,martie@ani.org,80965953344,09.08.2022 14:19:21,109,csv
+18,Rukzack,clearn@day.it,380971434567,15.08.2022 17:39:55,707,csv
