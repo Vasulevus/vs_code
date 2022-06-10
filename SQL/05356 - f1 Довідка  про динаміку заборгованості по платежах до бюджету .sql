@@ -13,14 +13,15 @@ declare @NewYear int = year(@NewDate)
 declare @NewMonth int = month(@NewDate)
 
 SELECT
-  id
-  ,organization
+   organization
   ,[timestamp]
-  ,[row]
   ,[0]
   ,[1]
-
   ,[8]
-
+INTO 
+    #Tmp_05356_F1
 FROM
-  DAA003
+  dbo.DAA003
+WHERE [1] = '010';
+
+SELECT * FROM #Tmp_05356_F1;
