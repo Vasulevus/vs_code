@@ -26,21 +26,21 @@ INSERT INTO #Companies (BySort, CompanyNameEng, OrgID, CompanyNameUkr)
        VALUES 
         (1, 'at-dtek-dniproenergo', 10, N'АТ "ДТЕК Дніпроенерго"'),   --pat-dtek-dniproenergo
         (2, 'at-dtek-zakhidenergo', 20, N'АТ "ДТЕК Західенерго"'),    --pat-dtek-zakhidenergo
-        --(3, 'TES_vsogo', 30, N'Генерація ТЕС всього'),
+        (3, 'TES_vsogo', 30, N'Генерація ТЕС всього'),
         (4, 'prat-kharkivska-tets-5', 40, N'ПрАТ "Харківська ТЕЦ-5"'),     --pat-kharkivska-tets-5
         (5, 'dp-sievierodonetska-tets', 50, N'ДП "Сєвєродонецька ТЕЦ"'),   --dp-severodonetska-tets
         (6, 'prat-mikolayivska-tets', 60, N'ПрАТ "Миколаївська ТЕЦ"'),     --pat-mikolayivska-tets
         (7, 'at-khersonska-tets', 70, N'АТ "Херсонська ТЕЦ"'),             --pat-khersonska-tets
         (8, 'at-dniprovska-tets', 80, N'АТ "Дніпровська ТЕЦ"'),            --pat-dniprovska-tets
         (9, 'at-krivorizka-teplotsentral', 90, N'АТ "Криворізька теплоцентраль"'),
-        (10, 'tets-kp-kiyivteploenergo', 100, N'КП "Київтеплоенерго"'),     --kp-kiyivteploenergo
+        (10, 'kp-kiyivteploenergo', 100, N'КП "Київтеплоенерго"'),     --kp-kiyivteploenergo
         (11, 'tov-naftogaz-teplo', 110, N'ТОВ "Нафтогаз Тепло"'),
-        -- (12, 'TETS_vsogo', 120, N'Генерація ТЕЦ всього'),
+        (12, 'TETS_vsogo', 120, N'Генерація ТЕЦ всього'),
         (13, 'prat-ukrgidroenergo', 130, N'ПрАТ "Укргідроенерго"'),   --pat-ukrgidroenergo
         (14, 'prat-nizhnodnistrovska-ges', 140, N'ПрАТ "Нижньодністровська ГЕС"'),    
-        --(15, 'HES_vsogo', 150, N'Генерація ГЕС всього'),
+        (15, 'HES_vsogo', 150, N'Генерація ГЕС всього'),
         (16, 'dp-naek-energoatom', 160, N'ДП "НАЕК "Енергоатом"'),    ---naek-energoatom-vsogo
-        -- (17, 'Generate_com', 170, N'Генеруючі компанії всього'),
+        (17, 'Generate_com', 170, N'Генеруючі компанії всього'),
         (18, 'at-vinnitsiaoblenergo', 180, N'АТ "Вінницяобленерго"'),          --vinnitsiaoblenergo
         (19, 'prat-volinoblenergo', 190, N'ПрАТ "Волиньобленерго"'),              --volinoblenergo
         (20, 'pat-zaporizhzhiaoblenergo', 200, N'ПАТ "Запоріжжяобленерго"'),  ---zaporizhzhiaoblenergo
@@ -53,16 +53,16 @@ INSERT INTO #Companies (BySort, CompanyNameEng, OrgID, CompanyNameUkr)
         (27, 'at-khmelnitskoblenergo', 270, N'АТ "Хмельницькобленерго"'),   --khmelnitskoblenergo
         (28, 'pat-cherkasioblenergo', 280, N'ПАТ "Черкасиобленерго"'),      --cherkasioblenergo
         (29, 'at-chernivtsioblenergo', 290, N'АТ "Чернівціобленерго"'),     --chernivtsioblenergo
-        --(30, 'OSR_vsogo', 300, N'Оператори системи розподілу всього'),
+        (30, 'OSR_vsogo', 300, N'Оператори системи розподілу всього'),
         (31, 'tov-enera-vinnitsia', 310, N'ТОВ "Енера Вінниця"'),
         (32, 'tov-volinelektrgozbut', 320, N'ТОВ "Волиньелектрозбут"'),   --tov-volinenergozbut
         (33, 'tov-zakarpattiaenergozbut', 330, N'ТОВ "Закарпаттяенергозбут"'),
         (34, 'tov-mikolayivska-ek', 340, N'ТОВ "Миколаївська ЕК"'),
         (35, 'tov-odeska-oblasna-ek', 350, N'ТОВ "Одеська обласна ЕК"'),
         (36, 'prat-kharkivenergozbut', 360, N'ПрАТ "Харківенергозбут"'),
-        (37, 'tov-chernivetska-oblasna-ek', 370, N'ТОВ "Чернівецька обласна ЕК"')
-			  --(38, 'PUP_vsogo', 380, N'Постачальники універсальних послуг'),
-        --(39, 'vsogo', 390, N'Всього по Україні')
+        (37, 'tov-chernivetska-oblasna-ek', 370, N'ТОВ "Чернівецька обласна ЕК"'),
+			  (38, 'PUP_vsogo', 380, N'Постачальники універсальних послуг'),
+        (39, 'vsogo', 390, N'Всього по Україні')
 
 
 --створюємо тимчасову таблицю для початкової агрегації
@@ -73,10 +73,7 @@ SELECT
   ,[CompanyNameUkr]
   ,[BySort]
   ,[OrgID]
-  ,[timestamp]
-  ,[0]
-  ,[1]
-  ,[8]
+  ,TRY_CAST([8] AS FLOAT) AS [8]
 INTO 
     #Tmp_05356_From_DAA003
 FROM
@@ -88,4 +85,100 @@ WHERE [1] = '010' --залишаємо лише значення 010
 AND
 (year([timestamp]) = @NewYear and month([timestamp]) = @NewMonth)	;
 
-SELECT * FROM #Tmp_05356_From_DAA003; --перевірка роботи тимчасової таблиці
+--SELECT * FROM #Tmp_05356_From_DAA003; --перевірка роботи тимчасової таблиці
+
+
+--SELECT CompanyNameUkr, SUM([8]) AS Datas FROM #Tmp_05356_From_DAA003 GROUP BY CompanyNameUkr;
+
+
+INSERT INTO #Tmp_05356_From_DAA003([organization],[CompanyNameUkr],[BySort],[OrgID],[8])
+SELECT 
+  'TES_vsogo' AS [organization]
+  ,N'Генерація ТЕС всього' AS [CompanyNameUkr]
+  ,3 AS [BySort]
+  ,30 AS [OrgID]
+  ,SUM([8]) AS [8]
+FROM
+  #Tmp_05356_From_DAA003
+WHERE
+  [OrgID] IN (10,20);
+
+--'TETS_vsogo', 120, N'Генерація ТЕЦ всього'),
+INSERT INTO #Tmp_05356_From_DAA003([organization],[CompanyNameUkr],[BySort],[OrgID],[8])
+SELECT 
+  'TETS_vsogo' AS [organization]
+  ,N'Генерація ТЕЦ всього' AS [CompanyNameUkr]
+  ,12 AS [BySort]
+  ,120 AS [OrgID]
+  ,SUM([8]) AS [8]
+FROM
+  #Tmp_05356_From_DAA003
+WHERE
+  [OrgID] >= 40
+AND
+  [OrgID] <= 110;
+
+
+
+
+
+INSERT INTO #Tmp_05356_From_DAA003([organization],[CompanyNameUkr],[BySort],[OrgID],[8])
+SELECT
+'HES_vsogo' AS [organization]
+  ,N'Генерація ГЕС всього' AS [CompanyNameUkr]
+  ,15 AS [BySort]
+  ,150 AS [OrgID]
+  ,SUM([8]) AS [8]
+FROM #Tmp_05356_From_DAA003
+WHERE
+[OrgID] in (130, 140);
+
+INSERT INTO #Tmp_05356_From_DAA003([organization],[CompanyNameUkr],[BySort],[OrgID],[8])
+select
+		'Generate_com' as [organization]
+		,N'Генеруючі компанії всього' as [CompanyNameUkr]
+    ,17 as [BySort] 
+    ,170 as [OrgID] 
+		,SUM([8]) AS [8]
+FROM #Tmp_05356_From_DAA003
+WHERE [OrgID] in (30, 120, 150, 160);
+
+INSERT INTO #Tmp_05356_From_DAA003([organization],[CompanyNameUkr],[BySort],[OrgID],[8])
+SELECT		
+    'OSR_vsogo' as [organization]
+		,N'Оператори системи розподілу всього' as [CompanyNameUkr]
+    ,30 as [BySort] 
+		,300 as [OrgID] 
+		,SUM([8]) AS [8]
+FROM #Tmp_05356_From_DAA003
+WHERE
+  [OrgID] >= 180
+AND
+  [OrgID] <= 290;
+
+INSERT INTO #Tmp_05356_From_DAA003([organization],[CompanyNameUkr],[BySort],[OrgID],[8])
+SELECT
+		'PUP_vsego' as [organization]  
+		,N'Постачальники універсальних послуг' as [CompanyNameUkr]
+    ,38 as [BySort] 
+		,380 as [OrgID] 
+		,SUM([8]) AS [8]
+FROM #Tmp_05356_From_DAA003
+WHERE
+  [OrgID] >= 310
+AND
+  [OrgID] <= 370;
+
+
+INSERT INTO #Tmp_05356_From_DAA003([organization],[CompanyNameUkr],[BySort],[OrgID],[8])
+SELECT
+		'vsogo' as [organization] 
+		,N'Всього по Україні' as [CompanyNameUkr]
+    ,39 as [BySort] 
+		,390 as [OrgID] 
+		,SUM([8]) AS [8]
+FROM #Tmp_05356_From_DAA003
+WHERE [OrgID] in (170, 300, 380);
+
+
+SELECT * FROM #Tmp_05356_From_DAA003 ORDER BY [BySort];
