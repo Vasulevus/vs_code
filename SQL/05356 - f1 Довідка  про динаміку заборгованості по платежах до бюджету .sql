@@ -764,3 +764,161 @@ select
 	  [BySort], [CompanyNameEng], [OrgID], [CompanyNameUkr],
 	  [9] as Col_B, [Num], [dataRep]
 from #Tmp3;
+
+
+
+
+
+
+
+--Довідка  про заборгованість, нарахування та сплату податків (розрахунки з бюджетом) Україна всього
+-- 1. Блок описания переменых
+declare @RYear int = 2021
+declare @RMonth int = 9
+
+--/*
+set @RYear = (@year);
+set @RMonth = (@month);
+-- */
+
+--select @RYear, @PrevRYear, @RMonth
+
+-- 2. Берем сырые данные за нужный период, отсекаем ненужные записи + делаем преобразование колонок с текста в число
+drop table if exists #Tmp
+select 
+	  [id], [status], timestamp_rep as [timestamp], 
+	  [organization], [row], [0], 
+	  [1], [2], [5], [6], [7], [9], [mth_numb],
+	  case 
+			when mth_numb = 1 then N'Січень'
+			when mth_numb = 2 then N'Лютий' 
+			when mth_numb = 3 then N'Березень'
+			when mth_numb = 4 then N'Квітень' 
+			when mth_numb = 5 then N'Травень' 
+			when mth_numb = 6 then N'Червень' 
+			when mth_numb = 7 then N'Липень' 
+			when mth_numb = 8 then N'Серпень' 
+			when mth_numb = 9 then N'Вересень' 
+			when mth_numb = 10 then N'Жовтень' 
+			when mth_numb = 11 then N'Листопад'
+			when mth_numb = 12 then N'Грудень'   
+	  end as [mth_name]
+into #Tmp
+from (
+      select 
+			[id], [status], [organization], [row], [0], 
+			TRY_CAST([1] as int) as [1]
+		    ,TRY_CAST([2] as float) as [2]
+	        ,TRY_CAST([5] as float) as [5] 
+	        ,TRY_CAST([6] as float) as [6]	
+			,TRY_CAST([7] as float) as [7]
+			,TRY_CAST([9] as float) as [9], 
+			timestamp, DATEADD(month, -1, timestamp) as [timestamp_rep],
+			month(DATEADD(month, -1, timestamp)) as [mth_numb]
+	  from [GZ].[dbo].[DAA003] 
+) m
+where 1=1 
+--and [status] in ('archived', 'formed')
+  and year([timestamp_rep]) = @RYear 
+  --and month([timestamp_rep]) <= @RMonth
+  and [1] in (10, 20)
+
+--select * from #Tmp order by [timestamp], [organization];
+
+
+--3. Просчитываем суммы всех столбцов всех отчитывающихся предприятий (Украина)
+drop table if exists #Tmp2
+select 
+	  [mth_numb], [mth_name], [0], [1],
+      sum ([2]) as [s1], sum ([5]) as [s4],
+	  sum ([6]) as [s5], sum ([7]) as [s6],
+	  sum ([9]) as [s8] 
+into #Tmp2
+from #Tmp
+group by [mth_numb], [mth_name], [0], [1];
+
+--select * from #Tmp2 order by [mth_numb], [1];
+
+--4. Разворачиваем столбцы
+drop table if exists #Tmp3
+select 
+	  [mth_numb], [mth_name], 
+	  [0], [1], 
+	  [column_name], [val] 
+into #Tmp3
+from #Tmp2
+  unpivot(
+         [val] for[column_name] in (
+		                             s1, s4, s5, s6, s8
+									 )
+          )as [test_unpivot];
+
+--select * from #Tmp3 order by [mth_numb], [1];
+
+--5. Формируем нужные нам столбцы
+drop table if exists #Tmp4
+select 
+	  [mth_numb], [mth_name], 
+	  sum(case when [1] = 10 and [column_name] = 's1' then val end) as [Col_1],
+	  sum(case when [1] = 20 and [column_name] = 's1' then val end) as [Col_2],
+	  sum(case when [1] = 10 and [column_name] = 's4' then val end) as [Col_3],
+	  sum(case when [1] = 20 and [column_name] = 's4' then val end) as [Col_5],
+	  sum(case when [1] = 10 and [column_name] = 's5' then val end) as [Col_7],
+	  sum(case when [1] = 10 and [column_name] = 's6' then val end) as [Col_9],
+	  sum(case when [1] = 20 and [column_name] = 's5' then val end) as [Col_11],
+	  sum(case when [1] = 20 and [column_name] = 's6' then val end) as [Col_13],
+	  sum(case when [1] = 10 and [column_name] = 's8' then val end) as [Col_15],
+	  sum(case when [1] = 20 and [column_name] = 's8' then val end) as [Col_16]
+into #Tmp4
+from #Tmp3
+group by [mth_numb], [mth_name];
+
+--select * from #Tmp4 order by [mth_numb];
+
+--6. Формируем таблицу текущие месяца, изменив на предыдущие (+1 номер месяца)
+drop table if exists #Tmp5
+select ([mth_numb] + 1) as [mth_numb_prev], [mth_numb] as [mth_numb_cur],
+        [mth_name] as [mth_name_prev], [Col_3] as [Col_3p], [Col_5] as [Col_5p], [Col_7] as [Col_7p],
+		[Col_9] as [Col_9p], [Col_11] as [Col_11p], [Col_13] as [Col_13p]
+into #Tmp5
+from #Tmp4
+
+--select * from #Tmp5 order by [mth_numb_prev];
+
+--7. Соединяем данные предыдущих и текущих значений месяцев
+drop table if exists #Tmp6
+select c.[mth_numb], c.[mth_name], 
+       c.[Col_1], c.[Col_2], c.[Col_3],
+	   c.[Col_5], c.[Col_7], c.[Col_9],
+	   c.[Col_11], c.[Col_13], c.[Col_15], c.[Col_16],
+	   p.[mth_numb_prev], p.[mth_numb_cur], p.[mth_name_prev],
+	   p.[Col_3p], p.[Col_5p], p.[Col_7p], p.[Col_9p],
+	   p.[Col_11p], p.[Col_13p]
+into #Tmp6
+from #Tmp4 c
+left join #Tmp5 p on (c.[mth_numb]=p.[mth_numb_prev])
+
+--select * from #Tmp6 order by [mth_numb];
+
+--8. Считаем нужные колонки
+drop table if exists #Tmp7
+select [mth_numb], [mth_name], 
+       [Col_1], [Col_2], 
+	   [Col_3], 
+	   (case when [Col_3p] is NULL then [Col_3] else ([Col_3] - [Col_3p]) end)  as [Col_4],
+	   [Col_5], 
+	   (case when [Col_5p] is NULL then [Col_5] else ([Col_5] - [Col_5p]) end)  as [Col_6],
+	   [Col_7], 
+	   (case when [Col_7p] is NULL then [Col_7] else ([Col_7] - [Col_7p]) end)  as [Col_8],
+	   [Col_9], 
+	   (case when [Col_9p] is NULL then [Col_9] else ([Col_9] - [Col_9p]) end) as [Col_10],
+	   [Col_11], 
+	   (case when [Col_11p] is NULL then [Col_11] else ([Col_11] - [Col_11p]) end) as [Col_12],
+	   [Col_13], 
+	   (case when [Col_13p] is NULL then [Col_13] else ([Col_13] - [Col_13p]) end) as [Col_14],
+	   [Col_15], [Col_16]
+into #Tmp7
+from #Tmp6
+
+--
+select * from #Tmp7 order by [mth_numb];

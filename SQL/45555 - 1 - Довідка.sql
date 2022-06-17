@@ -1,0 +1,4 @@
+USE GZ;
+
+SELECT *
+  FROM [GZ].[dbo].[AVV019];
