@@ -1,33 +1,30 @@
-declare @vYear int = 2020;
-declare @vMonth smallint = 12;
+declare @vYear int = 2021;
+declare @vMonth smallint = 1;
 
---
 /*
 set @vYear  = (@year);
 set @vMonth = (@month);
--- */
-declare @vNewDate date = DATEADD( month, 1, DATEFROMPARTS( @vYear, @vMonth, 1) ) -- зміщення, в зв'язку з невідповідністю звітуючого місяця
+ */
+declare @vNewDate date = DATEADD( month, 1, DATEFROMPARTS( @vYear, @vMonth, 1) ) -- Р·РјС–С‰РµРЅРЅСЏ, РІ Р·РІ'СЏР·РєСѓ Р· РЅРµРІС–РґРїРѕРІС–РґРЅС–СЃС‚СЋ Р·РІС–С‚СѓСЋС‡РѕРіРѕ РјС–СЃСЏС†СЏ
 -- select @vYear, @vMonth, DATEFROMPARTS( @vYear, @vMonth, 1), @vNewDate
 
--- отримуємо новий місяць і рік
+-- РѕС‚СЂРёРјСѓС”РјРѕ РЅРѕРІРёР№ РјС–СЃСЏС†СЊ С– СЂС–Рє
 declare @vNewYearForFilter int = Year(@vNewDate);
 declare @vNewMonthForFilter int = Month(@vNewDate);
 --select @vNewYearForFilter, @vNewMonthForFilter
 
--- Виводимо результат
+-- Р’РёРІРѕРґРёРјРѕ СЂРµР·СѓР»СЊС‚Р°С‚
 drop table if exists #Tmp;
 select [id], [template] 
       ,[timestamp]
 	 into #Tmp
-from [gz].[dbo].[avv009]
-where 1=1
-	  and [status] in ('archived', 'formed')
-	  and (year(timestamp) = @vNewYearForFilter and  month(timestamp) =  @vNewMonthForFilter);
+from [GZ_Arh].[dbo].[DAA003]
+where  (year(timestamp) = @vNewYearForFilter and  month(timestamp) =  @vNewMonthForFilter);
 
 drop table if exists #Tmp1;
 select distinct id,  timestamp , getdate() as data_report, @vYear as [year], @vMonth as [month], [template] into #Tmp1 from #Tmp;
 
---Беремо необхідні дані з бази ReportServer
+--Р‘РµСЂРµРјРѕ РЅРµРѕР±С…С–РґРЅС– РґР°РЅС– Р· Р±Р°Р·Рё ReportServer
 drop table if exists #Report;
 select [ItemID] 
       ,[Name] 
@@ -35,15 +32,15 @@ into #Report
 from [ReportServer].[dbo].[Catalog];
   --select * from #Report;
 
---З'єднуємо дані з Галузевої звітності та бази ReportServer 
+--Р—'С”РґРЅСѓС”РјРѕ РґР°РЅС– Р· Р“Р°Р»СѓР·РµРІРѕС— Р·РІС–С‚РЅРѕСЃС‚С– С‚Р° Р±Р°Р·Рё ReportServer 
 drop table if exists #Result; 
 select d.[id], d.[timestamp], d.[data_report], d.[year], d.[month], d.[template] , dn.[ItemID], dn.[name]
 into #Result
 from #Tmp1 d 
 inner join #Report dn on dn.[name]=d.[template] COLLATE DATABASE_DEFAULT;
 
---Додаємо дані в потрібну таблицю
-insert into [TestBD].[dbo].[Test_id2]      (
+--Р”РѕРґР°С”РјРѕ РґР°РЅС– РІ РїРѕС‚СЂС–Р±РЅСѓ С‚Р°Р±Р»РёС†СЋ
+insert into [TestBD].[dbo].[Test_table_1]      (
                                              [id], [timestamp], [data_report], [year]
 											 ,[month], [template], [ItemID], [name]) 
 
@@ -55,4 +52,14 @@ select  [id]
 		,[template]
 		,[ItemID]
 		,[name]  
-from #Result;
+from #Result
+WHERE [id] IN 
+(SELECT 
+	[id]
+FROM
+	#Result
+EXCEPT
+SELECT
+	[id]
+FROM 
+	[TestBD].[dbo].[Test_table_1]);
