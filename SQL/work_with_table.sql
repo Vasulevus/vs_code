@@ -65,3 +65,10 @@ AlTER TABLE orders ADD CONSTRAINT betweennumber CHECK (quantity BETWEEN 10 AND 3
 
 sp_helpconstraint orders; -- перевірка обмежень
 
+
+
+ALTER TABLE orders
+DROP CONSTRAINT orderkey; -- видалення обмежень
+
+
+EXEC sp_rename 'customers.address', 'town'; -- перейменування полів в таблиці.
