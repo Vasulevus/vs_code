@@ -72,3 +72,4 @@ DROP CONSTRAINT orderkey; -- видалення обмежень
 
 
 EXEC sp_rename 'customers.address', 'town'; -- перейменування полів в таблиці.
+
