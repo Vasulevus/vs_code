@@ -1,0 +1,75 @@
+CREATE TABLE [0222].[input_fields_list](
+	[ID] [int] NOT NULL,
+	[input_form] [nvarchar](255) NOT NULL,
+	[field_description] [nvarchar](255) NOT NULL,
+	[field_value_type] [nvarchar](255) NOT NULL,
+	[field_db_code] [nvarchar](255) NULL
+) ON [PRIMARY]
+GO
+
+
+INSERT INTO [0222].[input_fields_list](ID, input_form, field_description, field_value_type) VALUES 
+(1,'[0222].[Title].[form_1]','template ','text'),
+(2,'[0222].[Title].[form_1]','organization_code ','text'),
+(3,'[0222].[Title].[form_1]','organization ','text'),
+(4,'[0222].[Title].[form_1]','status ','text'),
+(5,'[0222].[Title].[form_1]','timestamp ','datetime'),
+(6,'[0222].[Title].[form_1]','last_update ','datetime'),
+(7,'[0222].[Title].[form_1]','Найменування ','text'),
+(8,'[0222].[Title].[form_1]','Фактична_адреса ','text'),
+(9,'[0222].[Title].[form_1]','Юридична_адреса ','text'),
+(10,'[0222].[Title].[form_1]','ЄДРПОУ','text')
+
+
+
+INSERT INTO [db_archive].[dbo].[list_makets] VALUES
+('0222', N'Звіт про викиди забруднюючих речовин і парникових газів в атмосферне повітря від стаціонарних джерел викидів', N'Коваленко Артур', N'Васильєв Олександр')
+
+
+--вставляємо дані в ту ж таблицю, з якої взяли
+INSERT INTO [db_archive].[0222].[input_fields_list] (ID, input_form, field_description, field_value_type, field_db)
+SELECT ID, input_form, field_description, field_value_type, dbo.get_field_name(field_description) AS field_db
+
+FROM [db_archive].[0222].[input_fields_list]
+
+
+
+CREATE TABLE [db_archive].[0222].[title] (
+F_1344633181 NVARCHAR(255) NOT NULL,
+F_335755275 NVARCHAR(255) NOT NULL,
+F_1553510724 NVARCHAR(255) NOT NULL,
+F450546908 NVARCHAR(255) NOT NULL,
+F_147495489 DATETIME NOT NULL,
+F_746347891 DATETIME NOT NULL,
+F1309265006 NVARCHAR(255) NOT NULL,
+F_1491450060 NVARCHAR(255) NULL,
+F658655227 NVARCHAR(255) NULL,
+F_543914863 NVARCHAR(255) NULL
+)
+
+
+
+use db_archive
+go
+INSERT INTO [db_archive].[0222].[title](
+F_1344633181
+,F_335755275
+,F_1553510724
+,F450546908
+,F_147495489
+,F_746347891
+,F1309265006
+,F_1491450060
+,F658655227
+,F_543914863)
+select [template]
+      ,[organization_code]
+      ,[organization]
+      ,[status]
+      ,[timestamp]
+      ,[last_update]
+      ,[Найменування]
+      ,[Фактична_адреса]
+      ,[Юридична_адреса]
+      ,[ЄДРПОУ]  from [SNEC-GZ-SSRS01].[GZ_Arh].[dbo].[0222]
+go

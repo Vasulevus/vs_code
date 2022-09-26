@@ -1,7 +1,7 @@
 --основна база
 USE master;
 GO
-SET NOCOUNT ON;
+SET NOCOUNT ON; -- відключаємо висвітлення вставлених рядків
 GO
 DROP DATABASE IF EXISTS Sample; -- якщо існує, видаляємо базу
 GO
