@@ -1,44 +1,4 @@
-/*назви полів 0222-1
-'template'
-'organization_code'
-'organization'
-'status'
-'timestamp'
-'last_update'
-'Найменування_забруднюючих_речовин_і_парникових_газів'
-'Коди_забруднюючих_речовин_і_парникових_газів'
-'Кількість_викинутих_в_атмосферне_повітря_забруднюючих_речовин_і_парникових_газів'
-'Розподіл'*/
 
-/*назви полів 0222-2
-template
-organization code
-organization
-status
-timestamp
-last update
-Найменування категорій джерел викидів
-Код рядка
-Кількість сірки діоксиду
-Кількість діоксиду  азоту
-Кількість оксиду  вуглецю
-Кількість неметанових летких  органічних сполук
-Кількість поліароматичних  вуглеводнів
-Кількість гексахлор-бензолу
-Кількість діоксинів і фуранів
-Кількість Тч2.5
-Кількість Тч10
-Кількість аміак
-Кількість ртуті
-Кількість кадмію
-Кількість свинцю
-Кількість арсену
-Кількість хрому
-Кількість міді
-Кількість нікелю
-Кількість селену
-Кількість цинку
-    */
 
 INSERT INTO [db_archive].[0222].[input_fields_list] VALUES
 (1,'[0222].[form_1].[Title]','template','text', dbo.get_field_name('template')),
@@ -108,7 +68,41 @@ F_1372077549  NVARCHAR(MAX) NULL
 )
 GO
 
-INSERT INTO [0222].[form_1].[Rozdil1](
+
+
+CREATE TABLE [db_archive].[0222].[rozdil2](
+F_1344633181 NVARCHAR(MAX) NOT NULL,
+F_335755275 NVARCHAR(MAX) NOT NULL,
+F_1553510724 NVARCHAR(MAX) NOT NULL,
+F450546908 NVARCHAR(MAX) NOT NULL,
+F_147495489 DATETIME NOT NULL,
+F_746347891 DATETIME NOT NULL,
+F1516201570 NVARCHAR(MAX) NOT NULL,
+F516612628 NVARCHAR(20) NOT NULL,
+F_70396811 DECIMAL(18,3) NULL,
+F_525049539 DECIMAL(18,3) NULL,
+F_484038743 DECIMAL(18,3) NULL,
+F190449737 DECIMAL(18,3) NULL,
+F1784469843 DECIMAL(18,3) NULL,
+F_233878981 DECIMAL(18,3) NULL,
+F_173347511 DECIMAL(18,3) NULL,
+F_386235643 DECIMAL(18,3) NULL,
+F_408295155 DECIMAL(18,3) NULL,
+F_1382054894 DECIMAL(18,3) NULL,
+F_316095393 DECIMAL(18,3) NULL,
+F_274096504 DECIMAL(18,3) NULL,
+F769729184 DECIMAL(18,3) NULL,
+F763544785 DECIMAL(18,3) NULL,
+F_2135590895 DECIMAL(18,3) NULL,
+F_1464367342 DECIMAL(18,3) NULL,
+F229474944 DECIMAL(18,3) NULL,
+F758678619 DECIMAL(18,3) NULL,
+F246798866 DECIMAL(18,3) NULL
+)
+
+
+/****** Script for SelectTopNRows command from SSMS  ******/
+INSERT INTO [db_archive].[0222].[form_1.rozdil1](
 
 F_1344633181,
 F_335755275,
@@ -122,71 +116,76 @@ F1683357075,
 F_1372077549
 
 )
-/******
 
-USE [GZ_Arh]
-GO
+SELECT  [template]
+      ,[organization_code]
+      ,[organization]
+      ,[status]
+      ,[timestamp]
+      ,[last_update]
+      ,[Найменування_забруднюючих_речовин_і_парникових_газів]
+      ,[Коди_забруднюючих_речовин_і_парникових_газів]
+      ,[Кількість_викинутих_в_атмосферне_повітря_забруднюючих_речовин_і_парникових_газів]
+      ,[Розподіл]
+  FROM [SNEC-GZ-SSRS01].[GZ_Arh].[dbo].[0222 - 1]
 
- Object:  Table [dbo].[0222 - 1]    Script Date: 26.09.2022 13:06:26 
-SET ANSI_NULLS ON
-GO
+INSERT INTO [db_archive].[0222].[form_1.rozdil2](
+F_1344633181,
+F_335755275,
+F_1553510724,
+F450546908,
+F_147495489,
+F_746347891,
+F1516201570,
+F516612628,
+F_70396811,
+F_525049539,
+F_484038743,
+F190449737,
+F1784469843,
+F_233878981,
+F_173347511,
+F_386235643,
+F_408295155,
+F_1382054894,
+F_316095393,
+F_274096504,
+F769729184,
+F763544785,
+F_2135590895,
+F_1464367342,
+F229474944,
+F758678619,
+F246798866
+)
+SELECT 
+    [template]
+    ,[organization code]
+    ,[organization]
+    ,[status]
+    ,[timestamp]
+    ,[last update]
+    ,[Найменування категорій джерел викидів]
+    ,[Код рядка]
+    ,[Кількість сірки діоксиду]
+    ,[Кількість діоксиду  азоту]
+    ,[Кількість оксиду  вуглецю]
+    ,[Кількість неметанових летких  органічних сполук]
+    ,[Кількість поліароматичних  вуглеводнів]
+    ,[Кількість гексахлор-бензолу]
+    ,[Кількість діоксинів і фуранів]
+    ,[Кількість Тч2.5]
+    ,[Кількість Тч10]
+    ,[Кількість аміак]
+    ,[Кількість ртуті]
+    ,[Кількість кадмію]
+    ,[Кількість свинцю]
+    ,[Кількість арсену]
+    ,[Кількість хрому]
+    ,[Кількість міді]
+    ,[Кількість нікелю]
+    ,[Кількість селену]
+    ,[Кількість цинку]
+FROM 
+    [SNEC-GZ-SSRS01].[GZ_Arh].[dbo].[0222 - 2]
 
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE TABLE [dbo].[0222 - 1](
-	[template] [nvarchar](50) NOT NULL,
-	[organization_code] [nvarchar](50) NOT NULL,
-	[organization] [nvarchar](50) NOT NULL,
-	[status] [nvarchar](50) NOT NULL,
-	[timestamp] [datetime2](7) NOT NULL,
-	[last_update] [datetime2](7) NOT NULL,
-	[Найменування_забруднюючих_речовин_і_парникових_газів] [nvarchar](100) NULL,
-	[Коди_забруднюючих_речовин_і_парникових_газів] [nvarchar](50) NULL,
-	[Кількість_викинутих_в_атмосферне_повітря_забруднюючих_речовин_і_парникових_газів] [decimal](18, 3) NULL,
-	[Розподіл] [nvarchar](50) NULL
-) ON [PRIMARY]
-GO
-
-
-USE [GZ_Arh]
-GO
-
-/****** Object:  Table [dbo].[0222 - 2]    Script Date: 26.09.2022 13:07:40 
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE TABLE [dbo].[0222 - 2](
-	[template] [nvarchar](255) NULL,
-	[organization code] [nvarchar](255) NULL,
-	[organization] [nvarchar](255) NULL,
-	[status] [nvarchar](255) NULL,
-	[timestamp] [datetime] NULL,
-	[last update] [datetime] NULL,
-	[Найменування категорій джерел викидів] [nvarchar](255) NULL,
-	[Код рядка] [nvarchar](255) NULL,
-	[Кількість сірки діоксиду] [decimal](10, 3) NULL,
-	[Кількість діоксиду  азоту] [decimal](10, 3) NULL,
-	[Кількість оксиду  вуглецю] [decimal](10, 3) NULL,
-	[Кількість неметанових летких  органічних сполук] [decimal](10, 3) NULL,
-	[Кількість поліароматичних  вуглеводнів] [decimal](10, 3) NULL,
-	[Кількість гексахлор-бензолу] [decimal](10, 3) NULL,
-	[Кількість діоксинів і фуранів] [decimal](10, 3) NULL,
-	[Кількість Тч2.5] [decimal](10, 3) NULL,
-	[Кількість Тч10] [decimal](10, 3) NULL,
-	[Кількість аміак] [decimal](10, 3) NULL,
-	[Кількість ртуті] [decimal](10, 3) NULL,
-	[Кількість кадмію] [decimal](10, 3) NULL,
-	[Кількість свинцю] [decimal](10, 3) NULL,
-	[Кількість арсену] [decimal](10, 3) NULL,
-	[Кількість хрому] [decimal](10, 3) NULL,
-	[Кількість міді] [decimal](10, 3) NULL,
-	[Кількість нікелю] [decimal](10, 3) NULL,
-	[Кількість селену] [decimal](10, 3) NULL,
-	[Кількість цинку] [decimal](10, 3) NULL
-) ON [PRIMARY]
-GO
-******/
