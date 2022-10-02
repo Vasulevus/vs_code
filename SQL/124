@@ -1,0 +1,224 @@
+USE [db_archive]
+GO
+
+/****** Object:  Table [124].[input_fields_list]    Script Date: 27.09.2022 14:26:57 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [124].[input_fields_list](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[input_form] [nvarchar](255) NOT NULL,
+	[field_description] [nvarchar](255) NOT NULL,
+	[field_value_type] [nvarchar](255) NOT NULL,
+	[field_db_code] [nvarchar](max) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+
+INSERT INTO [124].[input_fields_list] VALUES 
+( '[124].[form_1].[12]', 'template', 'text', dbo.get_field_name('template')),
+( '[124].[form_1].[12]', 'organization_code', 'code', dbo.get_field_name('organization_code')),
+( '[124].[form_1].[12]', 'organization', 'text', dbo.get_field_name('organization')),
+( '[124].[form_1].[12]', 'status', 'text', dbo.get_field_name('status')),
+( '[124].[form_1].[12]', 'timestamp', 'datetime', dbo.get_field_name('timestamp')),
+( '[124].[form_1].[12]', 'last_update', 'datetime', dbo.get_field_name('last_update')),
+( '[124].[form_1].[12]', 'Найменування об`єкту', 'text', dbo.get_field_name('Найменування об`єкту')),
+( '[124].[form_1].[12]', 'code', 'code', dbo.get_field_name('code')),
+( '[124].[form_1].[12]', 'Всього КВ', 'тис.грн', dbo.get_field_name('Всього КВ')),
+( '[124].[form_1].[12]', 'Всього БМР', 'тис.грн', dbo.get_field_name('Всього БМР')),
+( '[124].[form_1].[12]', 'За рахунок коштів держбюджету КВ', 'тис.грн', dbo.get_field_name('За рахунок коштів держбюджету КВ')),
+( '[124].[form_1].[12]', 'За рахунок власних коштів КВ', 'тис.грн', dbo.get_field_name('За рахунок власних коштів КВ')),
+( '[124].[form_1].[12]', 'За рахунок амортизації відрахування КВ', 'тис.грн', dbo.get_field_name('За рахунок амортизації відрахування КВ')),
+( '[124].[form_1].[12]', 'За рахунок кредитів банків КВ', 'тис.грн', dbo.get_field_name('За рахунок кредитів банків КВ')),
+( '[124].[form_1].[12]', 'За рахунок кредитів іноземних банків КВ', 'тис.грн', dbo.get_field_name('За рахунок кредитів іноземних банків КВ')),
+( '[124].[form_1].[12]', 'За рахунок коштів іноземних інвесторів', 'тис.грн', dbo.get_field_name('За рахунок коштів іноземних інвесторів')),
+( '[124].[form_1].[12]', 'За рахунок інших коштів', 'тис.грн', dbo.get_field_name('За рахунок інших коштів')),
+( '[124].[form_1].[12]', 'Незавершене будівництво на кінець року КВ', 'тис.грн', dbo.get_field_name('Незавершене будівництво на кінець року КВ')),
+( '[124].[form_1].[12]', 'Незавершене будівництво на кінець року БМР', 'тис.грн', dbo.get_field_name('Незавершене будівництво на кінець року БМР')),
+( '[124].[form_1].[13]', 'template', 'text', dbo.get_field_name('template')),
+( '[124].[form_1].[13]', 'organization_code', 'code', dbo.get_field_name('organization_code')),
+( '[124].[form_1].[13]', 'organization', 'text', dbo.get_field_name('organization')),
+( '[124].[form_1].[13]', 'status', 'text', dbo.get_field_name('status')),
+( '[124].[form_1].[13]', 'timestamp', 'datetime', dbo.get_field_name('timestamp')),
+( '[124].[form_1].[13]', 'last_update', 'datetime', dbo.get_field_name('last_update')),
+( '[124].[form_1].[13]', 'Найменування об`єкту', 'text', dbo.get_field_name('Найменування об`єкту')),
+( '[124].[form_1].[13]', 'code', 'code', dbo.get_field_name('code')),
+( '[124].[form_1].[13]', 'Всього', 'тис.грн', dbo.get_field_name('Всього')),
+( '[124].[form_1].[14]', 'template', 'text', dbo.get_field_name('template')),
+( '[124].[form_1].[14]', 'organization_code', 'code', dbo.get_field_name('organization_code')),
+( '[124].[form_1].[14]', 'organization', 'text', dbo.get_field_name('organization')),
+( '[124].[form_1].[14]', 'timestamp', 'text', dbo.get_field_name('timestamp')),
+( '[124].[form_1].[14]', 'last_update', 'datetime', dbo.get_field_name('last_update')),
+( '[124].[form_1].[14]', 'status', 'datetime', dbo.get_field_name('status')),
+( '[124].[form_1].[14]', 'Найменування', 'text', dbo.get_field_name('Найменування')),
+( '[124].[form_1].[14]', 'code', 'code', dbo.get_field_name('code')),
+( '[124].[form_1].[14]', 'Всього', 'збірний показник', dbo.get_field_name('Всього')),
+( '[124].[form_1].[15]', 'template', 'text', dbo.get_field_name('template')),
+( '[124].[form_1].[15]', 'organization_code', 'code', dbo.get_field_name('organization_code')),
+( '[124].[form_1].[15]', 'organization', 'text', dbo.get_field_name('organization')),
+( '[124].[form_1].[15]', 'status', 'text', dbo.get_field_name('status')),
+( '[124].[form_1].[15]', 'timestamp', 'datetime', dbo.get_field_name('timestamp')),
+( '[124].[form_1].[15]', 'last_update', 'datetime', dbo.get_field_name('last_update')),
+( '[124].[form_1].[15]', 'Найменування об`єкту', 'text', dbo.get_field_name('Найменування об`єкту')),
+( '[124].[form_1].[15]', 'Код рядка', 'code', dbo.get_field_name('Код рядка')),
+( '[124].[form_1].[15]', 'Затверджена кошторисна вартість тис грн', 'тис.грн', dbo.get_field_name('Затверджена кошторисна вартість тис грн')),
+( '[124].[form_1].[15]', 'Із загальної кошторисної вартості профінансовано', 'тис.грн', dbo.get_field_name('Із загальної кошторисної вартості профінансовано')),
+( '[124].[form_1].[15]', 'Із загальної кошторисної вартості виконано', 'тис.грн', dbo.get_field_name('Із загальної кошторисної вартості виконано')),
+( '[124].[form_1].[15]', 'Залишок кошторисної вартості по фінансуванню', 'тис.грн', dbo.get_field_name('Залишок кошторисної вартості по фінансуванню')),
+( '[124].[form_1].[15]', 'Залишок кошторисної вартості по виконанню', 'тис.грн', dbo.get_field_name('Залишок кошторисної вартості по виконанню')),
+( '[124].[form_1].[15]', 'Обсяг незавершеного будівництва тис грн', 'тис.грн', dbo.get_field_name('Обсяг незавершеного будівництва тис грн')),
+( '[124].[form_1].[15]', 'Обсяг передбаченого інвестиційною програмою фінансуання на gggg рік тис грн', 'тис.грн', dbo.get_field_name('Обсяг передбаченого інвестиційною програмою фінансуання на gggg рік тис грн')),
+( '[124].[form_1].[16]', 'template', 'text', dbo.get_field_name('template')),
+( '[124].[form_1].[16]', 'organization_code', 'code', dbo.get_field_name('organization_code')),
+( '[124].[form_1].[16]', 'organization', 'text', dbo.get_field_name('organization')),
+( '[124].[form_1].[16]', 'status', 'text', dbo.get_field_name('status')),
+( '[124].[form_1].[16]', 'timestamp', 'datetime', dbo.get_field_name('timestamp')),
+( '[124].[form_1].[16]', 'last_update', 'datetime', dbo.get_field_name('last_update')),
+( '[124].[form_1].[16]', 'Найменування об єкта', 'text', dbo.get_field_name('Найменування об єкта')),
+( '[124].[form_1].[16]', 'Код рядка', 'code', dbo.get_field_name('Код рядка')),
+( '[124].[form_1].[16]', 'Всього', 'тис.грн', dbo.get_field_name('Всього')),
+( '[124].[form_1].[16]', 'у тому числі постачальним органiзацiям', 'тис.грн', dbo.get_field_name('у тому числі постачальним органiзацiям')),
+( '[124].[form_1].[16]', 'у тому числі проектним органiзацiям', 'тис.грн', dbo.get_field_name('у тому числі проектним органiзацiям')),
+( '[124].[form_1].[16]', 'у тому числі підрядним органiзацiям', 'тис.грн', dbo.get_field_name('у тому числі підрядним органiзацiям')),
+( '[124].[form_1].[17]', 'template', 'text', dbo.get_field_name('template')),
+( '[124].[form_1].[17]', 'organization_code', 'code', dbo.get_field_name('organization_code')),
+( '[124].[form_1].[17]', 'organization', 'text', dbo.get_field_name('organization')),
+( '[124].[form_1].[17]', 'status', 'text', dbo.get_field_name('status')),
+( '[124].[form_1].[17]', 'timestamp', 'datetime', dbo.get_field_name('timestamp')),
+( '[124].[form_1].[17]', 'last_update', 'datetime', dbo.get_field_name('last_update')),
+( '[124].[form_1].[17]', 'Найменування об єкта', 'text', dbo.get_field_name('Найменування об єкта')),
+( '[124].[form_1].[17]', 'Код рядка', 'code', dbo.get_field_name('Код рядка')),
+( '[124].[form_1].[17]', 'Виконано КВ', 'тис.грн', dbo.get_field_name('Виконано КВ')),
+( '[124].[form_1].[17]', 'Виконано БМР', 'тис.грн', dbo.get_field_name('Виконано БМР')),
+( '[124].[form_1].[17]', 'Введення основних фондів', 'тис.грн', dbo.get_field_name('Введення основних фондів')),
+( '[124].[form_1].[17]', 'Введення потужностей', 'тис.грн', dbo.get_field_name('Введення потужностей'))
+
+
+
+
+
+--12 таблиця створюється в новій базі
+SELECT
+[template] AS F_1344633181
+,[organization_code] AS F_335755275
+,[organization] AS F_1553510724
+,[status] AS F450546908
+,[timestamp] AS F_147495489
+,[last_update] AS F_746347891
+,[Найменування об`єкту] AS F103656865
+,[code] AS F_1048688003
+,[Всього КВ] AS F1823103526
+,[Всього БМР] AS F714901830
+,[За рахунок коштів держбюджету КВ] AS F_1862796106
+,[За рахунок власних коштів КВ] AS F451973263
+,[За рахунок амортизації відрахування КВ] AS F139178298
+,[За рахунок кредитів банків КВ] AS F1920575138
+,[За рахунок кредитів іноземних банків КВ] AS F_976196979
+,[За рахунок коштів іноземних інвесторів] AS F2045797282
+,[За рахунок інших коштів] AS F439184379
+,[Незавершене будівництво на кінець року КВ] AS F_1607346490
+,[Незавершене будівництво на кінець року БМР] AS F209695093
+INTO [124].[form_1.Tabl_12]
+FROM [SNEC-GZ-SSRS01].[GZ_Arh].[dbo].[124_12]
+
+--13 таблиця створюється в новій базі
+SELECT
+ [template] AS F_1344633181
+      ,[organization code] AS F_335755275
+      ,[organization] AS F_1553510724
+      ,[status] AS F450546908
+      ,[timestamp] AS F_147495489
+      ,[last_update] AS F_746347891
+      ,[Найменування об'єкту] AS F103656865
+      ,[code] AS F_1048688003
+      ,[Всього] AS F_862499194
+INTO [124].[form_1.Tabl_13]
+FROM [SNEC-GZ-SSRS01].[GZ_Arh].[dbo].[124_13]
+
+
+--14 таблиця створюється в новій базі
+SELECT
+[template] AS F_1344633181
+      ,[organization_code] AS F_335755275
+      ,[organization] AS F_1553510724
+      ,[timestamp] AS F_147495489
+      ,[last_update] AS F_746347891
+      ,[status] AS F450546908
+      ,[Найменування] AS F1309265006
+      ,[code] AS F_1048688003
+      ,[Всього] AS F_862499194
+INTO [124].[form_1.Tabl_14]
+FROM [SNEC-GZ-SSRS01].[GZ_Arh].[dbo].[124_14];
+
+
+
+--15 таблиця створюється в новій базі
+SELECT
+       [template] AS F_1344633181
+      ,[organization_code] AS F_335755275
+      ,[organization] AS F_1553510724
+      ,[status] AS F450546908
+      ,[timestamp] AS F_147495489
+      ,[last_update] AS F_746347891
+      ,[Найменування об'єкту] AS F103656865
+      ,[Код_рядка] AS F516612628
+      ,[Затверджена_кошторисна_вартість_тис_грн] AS F1885226830
+      ,[Із_загальної_кошторисної_вартості_профінансовано] AS F_200958688
+      ,[Із_загальної_кошторисної_вартості_виконано] AS F1673730175
+      ,[Залишок_кошторисної_вартості_по_фінансуванню] AS F884088231
+      ,[Залишок_кошторисної_вартості_по_виконанню] AS F_176918246
+      ,[Обсяг_незавершеного_будівництва_тис_грн] AS F_911259168
+      ,[Обсяг_передбаченого_інвестиційною_програмою_фінансуання_на_gggg_рік_тис_грн] AS F_1628679379
+
+INTO 
+       [124].[form_1.Tabl_15]
+FROM
+       [SNEC-GZ-SSRS01].[GZ_Arh].[dbo].[124_15];
+
+
+--16 таблиця створюється в новій базі
+SELECT
+       [template] AS F_1344633181
+      ,[organization_code] AS F_335755275
+      ,[organization] AS F_1553510724
+      ,[status] AS F450546908
+      ,[timestamp] AS F_147495489
+      ,[last_update] AS F_746347891
+      ,[Найменування_об_єкта] AS F_451262708
+      ,[Код_рядка] AS F516612628
+      ,[Всього] AS F_862499194
+      ,[у_тому_числі_постачальним_органiзацiям] AS F1248067878
+      ,[у_тому_числі_проектним_органiзацiям] AS F_681881373
+      ,[у_тому_числі_підрядним_органiзацiям] AS F719013243
+INTO 
+       [124].[form_1.Tabl_16]
+FROM
+       [SNEC-GZ-SSRS01].[GZ_Arh].[dbo].[124_16];
+
+
+
+--17 таблиця створюється в новій базі
+SELECT
+[template] AS F_1344633181
+      ,[organization_code] AS F_335755275
+      ,[organization] AS F_1553510724
+      ,[status] AS F450546908
+      ,[timestamp] AS F_147495489
+      ,[last_update] AS F_746347891
+      ,[Найменування_об_єкта] AS F_451262708
+      ,[Код_рядка] AS F516612628
+      ,[Виконано_КВ] AS F_331196381
+      ,[Виконано_БМР] AS F278661158
+      ,[Введення_основних_фондів] AS F_1185642237
+      ,[Введення_потужностей] AS F_491796778
+INTO 
+       [124].[form_1.Tabl_17]
+FROM
+       [SNEC-GZ-SSRS01].[GZ_Arh].[dbo].[124_17];
