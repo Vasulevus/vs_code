@@ -600,3 +600,26 @@ INSERT INTO [41971].[input_fields_list] VALUES
 ( '78', '[41971].[form_4]', 'timestamp', 'datetime', dbo.get_field_name('timestamp')),
 ( '79', '[41971].[form_4]', 'last update', 'datetime', dbo.get_field_name('last update'))
 
+--41971 перейменування полів
+
+EXECUTE sp_rename '[41971].[form_2].[6]', 'F1177959681', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[10]', 'F_3416413', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[35]', 'F_171189085', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[110]', 'F1928833155', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[154]', 'F1928833161', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[220]', 'F_1292408701', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[330]', 'F_218683261', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[400]', 'F_218699648', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[500]', 'F_218716032', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[750]', 'F1928734850', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[800]', 'F_218503040', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[0.38]', 'F_33317357', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[Всього]', 'F_862499194', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[Код рядка]', 'F516612628', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[Назва показника]', 'F1365791347', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[template]', 'F_1344633181', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[organization code]', 'F414049621', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[organization (old)]', 'F_348666022', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[organization (new)]', 'F1798145901', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[timestamp]', 'F_147495489', 'COLUMN';
+EXECUTE sp_rename '[41971].[form_2].[last update]', 'F1266382835', 'COLUMN';
