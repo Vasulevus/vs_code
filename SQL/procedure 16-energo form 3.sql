@@ -7,11 +7,11 @@ GO
 DECLARE 
       @year NCHAR(4),
       @month NVARCHAR(2)
-SET @year = '2021'
-SET @month = '05'
+SET @year = YEAR(GETDATE())
+SET @month = FORMAT( EOMONTH( DATEADD( month,-1,GETDATE() ), 0 ), 'MM')
 IF OBJECT_ID('[db_depositarium].[16_enerho].[output_form3_' + @year +'_' + @month + ']') IS NOT NULL
 
-PRINT 'ALREADY CREATED'
+EXEC (' SELECT * FROM [db_depositarium].[16_enerho].[output_form3_' + @year +'_' + @month + ']')
 
 
 ELSE
@@ -34,7 +34,7 @@ ELSE
             ,[F_591333549]
             ,[F608712032]
       INTO #input_3_form
-      FROM [db_archive].[m16_energo].[input_form3];
+      FROM [db_archive].[16_еnеrho].[input_form3];
 
 
       UPDATE #input_3_form
@@ -114,7 +114,7 @@ ELSE
       INTO #M
       FROM 
             #input_3_form AS M
-      WHERE       [date_for] = '20220501' --місяць
+      WHERE       [date_for] = @year + '-' + @month + '-01' --місяць
       GROUP BY 
             [company_name];
 
@@ -141,7 +141,7 @@ ELSE
       INTO #G
       FROM 
             #input_3_form AS G
-      WHERE [date_for] >= '20220101' AND [date_for] <= '20220501'
+      WHERE [date_for] >= @year + '-01-01' AND [date_for] <= @year + '-' + @month + '-01'
       GROUP BY 
             [company_name];
 
@@ -222,9 +222,8 @@ EXEC('      SELECT *
 
       ) AS Z ');
 
+EXEC (' SELECT * FROM [db_depositarium].[16_enerho].[output_form3_' + @year +'_' + @month + ']')
       
 --[output_form3_' + @year +'_' + @month + '] 
 --      SELECT * FROM  [db_depositarium].[16_enerho].[output_form3_' + @year +'_' + @month + ']
  --     SELECT * FROM #Z;
-
-
