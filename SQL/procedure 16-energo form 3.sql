@@ -3,12 +3,15 @@ USE db_archive;
 GO
 
 
-
+ CREATE PROCEDURE [16_enerho].[input_form3]
+ AS
 DECLARE 
       @year NCHAR(4),
-      @month NVARCHAR(2)
+      @month NVARCHAR(2),
+      @monthname NVARCHAR(15)
 SET @year = YEAR(GETDATE())
 SET @month = FORMAT( EOMONTH( DATEADD( month,-1,GETDATE() ), 0 ), 'MM')
+SET @monthname = 	FORMAT( GETDATE() , 'MMMM', 'uk-ua')
 IF OBJECT_ID('[db_depositarium].[16_enerho].[output_form3_' + @year +'_' + @month + ']') IS NOT NULL
 
 EXEC (' SELECT * FROM [db_depositarium].[16_enerho].[output_form3_' + @year +'_' + @month + ']')
