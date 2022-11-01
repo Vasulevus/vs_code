@@ -18,19 +18,19 @@ GO
 
 
 ALTER PROCEDURE [16_еnеrho].[output_form3]
-      @year NCHAR(4),
-      @month NVARCHAR(2),
-   --   @monthname NVARCHAR(15)
+      @yearQ NCHAR(4),
+      @monthQ NVARCHAR(2)
+--      @monthname NVARCHAR(15)
 AS 
 
---SET @year = YEAR(GETDATE())
---SET @month = FORMAT( EOMONTH( DATEADD( month,-1,GETDATE() ), 0 ), 'MM')
+SET @yearQ = YEAR(GETDATE())
+SET @monthQ = FORMAT( EOMONTH( DATEADD( month,-1,GETDATE() ), 0 ), 'MM')
 --SET @monthname = 	FORMAT( GETDATE() , 'MMMM', 'uk-ua')
 
 SET NOCOUNT ON
 BEGIN
 DECLARE @SQL nvarchar(max)
-IF OBJECT_ID('[db_depositarium].[16_еnеrho].[output_form3_' + @year +'_' + @month + ']-01') IS NULL
+IF OBJECT_ID('[db_depositarium].[16_еnеrho].[output_form3_' + @yearQ +'_' + @monthQ + '_01]') IS NULL
 
       BEGIN
             DROP TABLE IF EXISTS  #input_3_form;
@@ -117,7 +117,7 @@ IF OBJECT_ID('[db_depositarium].[16_еnеrho].[output_form3_' + @year +'_' + @mo
             INTO #M
             FROM 
                   #input_3_form AS M
-            WHERE       [date_for] = @year + '-' + @month + '-01' --місяць
+            WHERE       [date_for] = @yearQ + '-' + @monthQ + '-01' --місяць
             GROUP BY 
                   [company_name];
 
@@ -144,7 +144,7 @@ IF OBJECT_ID('[db_depositarium].[16_еnеrho].[output_form3_' + @year +'_' + @mo
             INTO #G
             FROM 
                   #input_3_form AS G
-            WHERE [date_for] >= @year + '-01-01' AND [date_for] <= @year + '-' + @month + '-01'
+            WHERE [date_for] >= @yearQ + '-01-01' AND [date_for] <= @yearQ + '-' + @monthQ + '-01'
             GROUP BY 
                   [company_name];
 
@@ -215,7 +215,7 @@ IF OBJECT_ID('[db_depositarium].[16_еnеrho].[output_form3_' + @year +'_' + @mo
 
 
       EXEC('      SELECT *
-            INTO [db_depositarium].[16_еnеrho].[output_form3_' + @year +'_' + @month + '] 
+            INTO [db_depositarium].[16_еnеrho].[output_form3_' + @yearQ +'_' + @monthQ + '_01] 
             FROM(
 
             SELECT * FROM #P
@@ -225,14 +225,108 @@ IF OBJECT_ID('[db_depositarium].[16_еnеrho].[output_form3_' + @year +'_' + @mo
             ) AS Z ');
 
 
-            SET @SQL=' SELECT * FROM [db_depositarium].[16_еnеrho].[output_form3_' + @year +'_' + @month + ']-01'
+            SET @SQL=' SELECT * FROM [db_depositarium].[16_еnеrho].[output_form3_' + @yearQ +'_' + @monthQ + '_01]'
             EXECUTE sp_executesql  @SQL
       END;
 
-	SET @SQL=' SELECT * FROM [db_depositarium].[16_еnеrho].[output_form3_' + @year +'_' + @month + ']-01'
+	SET @SQL=' SELECT * FROM [db_depositarium].[16_еnеrho].[output_form3_' + @yearQ +'_' + @monthQ + '_01]'
 	EXECUTE sp_executesql  @SQL
 END
 GO
 
 
---SET @monthnameQ = 	FORMAT( GETDATE() , 'MMMM', 'uk-ua')
+
+
+
+
+IF OBJECT_ID('[db_depositarium].[16_enerho].[output_form3_' + @yearQ +'_' + @monthQ + ']') IS NULL
+
+      BEGIN
+            DROP TABLE IF EXISTS  #input_3_form;
+            SELECT [date_for]
+                  ,[company_name]
+                  ,[file_name]
+                  ,[F1268613809]
+                  ,[F_957837583]
+                  ,[F_1515326174]
+                  ,[F_388169605]
+                  ,[F_398454515]
+                  ,[F_95506163]
+                  ,[F_1948051532]
+                  ,[F_591333549]
+                  ,[F608712032]
+            INTO #input_3_form
+            FROM [db_archive].[16_enerho].[input_form3];
+
+            UPDATE #input_3_form
+            SET [F1268613809] = '0' WHERE [F1268613809] = '-';
+            
+            UPDATE #input_3_form
+            SET [F_1515326174] = '0' WHERE [F_1515326174]  = '-';
+            
+            UPDATE #input_3_form
+            SET [F_388169605] = '0' WHERE [F_388169605]  = '-';
+            
+            UPDATE #input_3_form   
+            SET [F_398454515] = '0' WHERE [F_398454515]  = '-';  
+            
+            UPDATE #input_3_form
+            SET [F_1948051532] = '0' WHERE [F_1948051532]   = '-';
+            
+            UPDATE #input_3_form 
+            SET [F_591333549] = '0' WHERE [F_591333549]  = '-';
+            
+            UPDATE #input_3_form   
+            SET [F608712032] = '0' WHERE [F608712032]  = '-';
+
+            UPDATE #input_3_form
+            SET [F1268613809] = '0' WHERE [F1268613809] = 'уточнюється';
+            
+            UPDATE #input_3_form
+            SET [F_1515326174] = '0' WHERE [F_1515326174]  = 'уточнюється';
+            
+            UPDATE #input_3_form
+            SET [F_388169605] = '0' WHERE [F_388169605]  = 'уточнюється';
+            
+            UPDATE #input_3_form   
+            SET [F_398454515] = '0' WHERE [F_398454515]  = 'уточнюється';  
+            
+            UPDATE #input_3_form
+            SET [F_1948051532] = '0' WHERE [F_1948051532]   = 'уточнюється';
+            
+            UPDATE #input_3_form 
+            SET [F_591333549] = '0' WHERE [F_591333549]  = 'уточнюється';
+            
+            UPDATE #input_3_form   
+            SET [F608712032] = '0' WHERE [F608712032]  = 'уточнюється';
+            
+            UPDATE #input_3_form
+            SET [F_1948051532] = '2' WHERE [F_1948051532]   = '2 (решта визначити не можливо)';
+            
+            UPDATE #input_3_form
+            SET [F_591333549] = '6.36' WHERE [F_591333549]   = '6,36 (решта визначити не можливо)';
+            
+            DROP TABLE IF EXISTS #M;
+            
+            SELECT 
+                  [company_name]
+                  ,SUM(CAST([F_957837583] AS INT)) AS [Відмови І категорії всього]
+                  ,0 AS [Відмови І категорії всього нак]
+                  ,SUM(CAST([F_1515326174]AS INT)) AS [Відмови І категорії з вини персоналу]
+                  , 0 AS [Відмови І категорії з вини персоналу нак]
+                  ,SUM(CAST([F_388169605]AS FLOAT)) AS [Відмови І категорії Недовідпуск тис.кВг год] 
+                  , 0 AS [Відмови І категорії Недовідпуск тис.кВг год нак] 
+
+                  ,SUM(CAST([F_95506163]AS INT)) AS [Відмови ІI категорії всього]
+                  ,0 AS [Відмови ІI категорії всього нак]
+                  ,SUM(CAST([F_1948051532]AS INT)) AS [Відмови ІІ категорії з вини персоналу]
+                  ,0  AS [Відмови ІІ категорії з вини персоналу нак]
+                  ,SUM(CAST(TRIM([F_591333549])AS FLOAT)) AS [Відмови ІI категорії Недовідпуск тис.кВг год]
+                  , 0  AS [Відмови ІI категорії Недовідпуск тис.кВг год нак]
+            INTO #M
+            FROM 
+                  #input_3_form AS M
+            WHERE       [date_for] = '2022-01-01' --місяць
+            GROUP BY 
+                  [company_name];
+      END
