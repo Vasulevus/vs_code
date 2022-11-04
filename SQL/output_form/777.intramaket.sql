@@ -10,6 +10,7 @@ SELECT
 	,[Україна (всього)] AS [Значення в клітинці]
 	,'<=' AS [Умова перевірки/ отримання значення]
 	,'1,00' AS [Значення для перевірки]
+	,'-' AS [Адреса клітинки / функція 2]
 	
 FROM
 (
@@ -44,3 +45,38 @@ FROM
     AND
         [IF1].F931084159 = '9') AS A
 WHERE [Україна (всього)] > 1;
+
+
+
+SELECT
+    [npp]
+      ,[Sorted]
+      ,[indicators]
+      ,[VOU_PD_ТUOM]
+      ,[VSP_PD_ТUОМ]
+      ,[PD_ТUОМ_vsoho]
+      ,[VOU_PN_ТUOM]
+      ,[VSP_PN_ТUОМ]
+      ,[PN_ТUОМ_vsoho]
+      ,[Ukraine]
+FROM
+    [db_depositarium].[777].[479556726_output_form_' + @date_for + ']
+
+DECLARE 
+@date_for NVARCHAR(MAX),
+@SQL NVARCHAR(MAX)
+
+USE db_depositarium;
+
+SELECT
+    ROW_NUMBER() OVER(ORDER BY [npp]) AS [П.н.]
+	,'Розширений макет для проведення дослідної експлуатації по Україні' AS [Назва файлу]
+	,'I15' AS [Адреса клітинки / функція]
+	,[Ukraine] AS [Значення в клітинці]
+	,'<=' AS [Умова перевірки/ отримання значення]
+	,'1,00' AS [Значення для перевірки]
+	,'-' AS [Адреса клітинки / функція 2]
+FROM 
+    [db_depositarium].[777].[479556726_output_form_20220901]
+WHERE [Ukraine]> 1
+AND [npp] = '9'
