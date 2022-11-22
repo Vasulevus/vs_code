@@ -607,8 +607,8 @@ BEGIN
 		,SUM([4]) AS [4]
 		, SUM([5]) AS [5]
 
-		,'' AS [6]
-		,'' AS [7]
+		,NULL AS [6]
+		,NULL AS [7]
 		,'' AS [8]
 		, SUM([9]) AS [9]
 		,'' AS [10]
@@ -787,8 +787,8 @@ BEGIN
 		,SUM([4]) AS [4]
 		, SUM([5]) AS [5]
 
-		,'' AS [6]
-		,'' AS [7]
+		,NULL AS [6]
+		,NULL AS [7]
 		,'' AS [8]
 		, SUM([9]) AS [9]
 		,'' AS [10]
@@ -847,7 +847,7 @@ BEGIN
 		,SUM([63]) AS [63]
 		,SUM([64]) AS [64]
 		FROM
-			#TempTable1_PN
+			#TempTable1_PD
 		WHERE
 			[4] IS NOT NULL
 		AND
@@ -876,8 +876,8 @@ BEGIN
 		,'' AS [3]
 		,SUM([4]) AS [4]
 		, SUM([5]) AS [5]
-		,'' AS [6]
-		,'' AS [7]
+		,NULL AS [6]
+		,NULL AS [7]
 		,'' AS [8]
 		, SUM([9]) AS [9]
 		,'' AS [10]
