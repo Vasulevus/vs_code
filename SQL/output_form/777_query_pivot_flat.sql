@@ -491,16 +491,16 @@ CREATE OR ALTER   PROCEDURE [777].[479556726_output_form_flat]
 @date_for nvarchar(max)--створюємо змінну
 )
 AS
-BEGIN
+BEGIN -- перший рівень процедури
 	DECLARE @SQL NVARCHAR(MAX)
-    --SET @date_for = '2022-11-01' --лише для тестування, пізніше закоментити або видалити
+    --SET @date_for = '20221101' --лише для тестування, пізніше закоментити або видалити
 
     IF OBJECT_ID('[db_depositarium].[777].[479556726_output_form_' + @date_for + '_flat]') IS NULL --перевіряємо, чи відсутній об'єкт
-	BEGIN
+	BEGIN -- другий рівень процедури, де ми виконуємо запит, якщо відсутній об'єкт/таблиця
 		-------------------------------створюємо північну частину----------------------------------------------
 		DROP TABLE IF EXISTS #TempTable1_PN;
 		SELECT
-			ROW_NUMBER() OVER (ORDER BY [company_name]) AS npp
+			ROW_NUMBER() OVER (ORDER BY [company_name]) AS npp --генеруємо номер рядка
 			,[date_for]
 			,[company_name]
 			,[1]
@@ -567,8 +567,8 @@ BEGIN
 			,[62]
 			,CAST([63] AS DECIMAL(10,3)) AS [63]
 			,CAST([64] AS DECIMAL(10,3)) AS [64]
-		INTO #TempTable1_PN
-		FROM
+		INTO #TempTable1_PN -- вставляємо ці дані в таблицю по півночі
+		FROM -- беремо дані з перших двох вхідних форм
 		(
 			SELECT 
 				[date_for]
@@ -586,6 +586,7 @@ BEGIN
 			FROM 
 				[db_archive].[777].[input_form2]
 		) AS SourceTable 
+		-- далі робимо pivot для того, щоб розвернути рядки на поля
 		pivot(MIN([values]) for [npp] in    ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10],
 		[11], [12], [13], [14], [15], [16], [17], [18], [19], [20],
 		[21], [22], [23], [24], [25], [26], [27], [28], [29], [30],
@@ -593,10 +594,12 @@ BEGIN
 		[41], [42], [43], [44], [45], [46], [47], [48], [49], [50],
 		[51], [52], [53], [54], [55], [56], [57], [58], [59], [60],
 		[61], [62], [63], [64])) as PivotTable
+		WHERE
+			[date_for] = @date_for --порівнюємо поле зі змінною
 
 		DROP TABLE IF EXISTS #TempTable2_PN_SUM;
 
-		INSERT INTO #TempTable1_PN
+		INSERT INTO #TempTable1_PN -- вносимо в таблицю по півночі рядок із сумарними даними
 		SELECT
 		'3' AS [npp]
 		,MIN([date_for]) AS [date_for]
@@ -671,7 +674,7 @@ BEGIN
 		FROM
 			#TempTable1_PN
 		WHERE
-			[4] IS NOT NULL
+			[4] IS NOT NULL -- вносимо цю таблицю в тому випадку, якщо дані наявні в полі 4 та 5 (можна і більше)
 		AND
 			[5] IS NOT NULL;
 
@@ -745,8 +748,8 @@ BEGIN
 			,[62]
 			,CAST([63] AS DECIMAL(10,3)) AS [63]
 			,CAST([64] AS DECIMAL(10,3)) AS [64]
-		INTO #TempTable1_PD
-		FROM
+		INTO #TempTable1_PD -- вносимо дані в тимчасову таблицю по півддню
+		FROM -- дані беремо із вхідних форм 3 та 4
 		(
 			SELECT 
 				[date_for]
@@ -764,6 +767,7 @@ BEGIN
 			FROM 
 				[db_archive].[777].[input_form4]
 		) AS SourceTable 
+		-- робимо pivot з рядків у поля
 		pivot(MIN([values]) for [npp] in    ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10],
 		[11], [12], [13], [14], [15], [16], [17], [18], [19], [20],
 		[21], [22], [23], [24], [25], [26], [27], [28], [29], [30],
@@ -776,7 +780,7 @@ BEGIN
 
 
 		--
-		INSERT INTO #TempTable1_PD
+		INSERT INTO #TempTable1_PD -- вставляємо в таблицю із даними по півдню сумарні дані
 		SELECT
 		'6' AS [npp]
 		,MIN([date_for]) AS [date_for]
@@ -849,24 +853,24 @@ BEGIN
 		FROM
 			#TempTable1_PD
 		WHERE
-			[4] IS NOT NULL
+			[4] IS NOT NULL -- також звіряємо щоб не додавався рядок, якщо немає даних
 		AND
 			[5] IS NOT NULL;
 
 
 		--вставляємо в таблицю #TempTable2 дані з двох попередніх таблиць
 		DROP TABLE IF EXISTS #TempTable2;
-		SELECT * 
+		SELECT * -- вносимо дані в спільну таблицю з "північної" таблиці
 		INTO #TempTable2	
 		FROM #TempTable1_PN;
 
-		INSERT INTO #TempTable2
+		INSERT INTO #TempTable2 -- вносимо дані в спільну таблицю з "південної" таблиці
 		SELECT *
 		FROM #TempTable1_PD;
 
 
 
-		INSERT INTO #TempTable2
+		INSERT INTO #TempTable2 -- вносимо сумарні дані по Україні
 		SELECT
 		'7' AS [npp]
 		,MIN([date_for]) AS [date_for]
@@ -947,10 +951,14 @@ BEGIN
 				[db_depositarium].[777].[479556726_output_form_' + @date_for + '_flat] 
 			FROM
 				#TempTable2
+			WHERE
+				[4] IS NOT NULL
+				AND
+				[5] IS NOT NULL
 			');--створюємо таблицю в депозитаріумі, якщо її не існувало раніше
 		SET @SQL = 'SELECT * FROM [db_depositarium].[777].[479556726_output_form_' + @date_for + '_flat]'; --змінну SQL встановлюємо для виконання через процедуру
 		EXECUTE sp_executesql  @SQL
-	END
+	END -- закінчуємо першу частину if і починаємо другу на наступному рядку
 	SET @SQL = 'SELECT * FROM [db_depositarium].[777].[479556726_output_form_' + @date_for + '_flat]'; --Якщо об'єкт пристуній, то переходимо одразу до встановлення значення змінної ...
     EXECUTE sp_executesql  @SQL -- ... та виконання запиту
 END
