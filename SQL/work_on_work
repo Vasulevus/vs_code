@@ -1,56 +1,56 @@
-CREATE TABLE [0222].[input_fields_list](
+--вставляємо в таблицю зі списком макетів дані
+INSERT INTO [db_archive].[dbo].[list_makets] VALUES
+('0222', N'Звіт про викиди забруднюючих речовин і парникових газів в атмосферне повітря від стаціонарних джерел викидів', N'Коваленко Артур', N'Васильєв Олександр')
+
+--створюємо таблицю з назвами полів
+CREATE TABLE [db_archive].[0221].[input_fields_list](
 	[ID] [int] NOT NULL,
 	[input_form] [nvarchar](255) NOT NULL,
 	[field_description] [nvarchar](255) NOT NULL,
 	[field_value_type] [nvarchar](255) NOT NULL,
-	[field_db_code] [nvarchar](255) NULL
+	[field_db_code] [nvarchar](255) NOT NULL
 ) ON [PRIMARY]
 GO
 
-
+--вставляємо дані в створену таблицю, зокрема використовуємо функцію для генерації назв полів get_field_name
 INSERT INTO [0222].[input_fields_list](ID, input_form, field_description, field_value_type) VALUES 
-(1,'[0222].[Title].[form_1]','template ','text'),
-(2,'[0222].[Title].[form_1]','organization_code ','text'),
-(3,'[0222].[Title].[form_1]','organization ','text'),
-(4,'[0222].[Title].[form_1]','status ','text'),
-(5,'[0222].[Title].[form_1]','timestamp ','datetime'),
-(6,'[0222].[Title].[form_1]','last_update ','datetime'),
-(7,'[0222].[Title].[form_1]','Найменування ','text'),
-(8,'[0222].[Title].[form_1]','Фактична_адреса ','text'),
-(9,'[0222].[Title].[form_1]','Юридична_адреса ','text'),
-(10,'[0222].[Title].[form_1]','ЄДРПОУ','text')
+(1,'[0222].[Title].[form_1]','template ','text', get_field_name('template')),
+(2,'[0222].[Title].[form_1]','organization_code ','text', get_field_name('organization_code')),
+(3,'[0222].[Title].[form_1]','organization ','text', get_field_name('organization ')),
+(4,'[0222].[Title].[form_1]','status ','text', get_field_name('status ')),
+(5,'[0222].[Title].[form_1]','timestamp ','datetime', get_field_name('timestamp ')),
+(6,'[0222].[Title].[form_1]','last_update ','datetime', get_field_name('last_update ')),
+(7,'[0222].[Title].[form_1]','Найменування ','text', get_field_name('Найменування ')),
+(8,'[0222].[Title].[form_1]','Фактична_адреса ','text', get_field_name('Фактична_адреса ')),
+(9,'[0222].[Title].[form_1]','Юридична_адреса ','text', get_field_name('Юридична_адреса ')),
+(10,'[0222].[Title].[form_1]','ЄДРПОУ','text', get_field_name('ЄДРПОУ'))
 
 
 
+--вставляємо дані в список макетів
 INSERT INTO [db_archive].[dbo].[list_makets] VALUES
 ('0222', N'Звіт про викиди забруднюючих речовин і парникових газів в атмосферне повітря від стаціонарних джерел викидів', N'Коваленко Артур', N'Васильєв Олександр')
 
 
---вставляємо дані в ту ж таблицю, з якої взяли
-INSERT INTO [db_archive].[0222].[input_fields_list] (ID, input_form, field_description, field_value_type, field_db)
-SELECT ID, input_form, field_description, field_value_type, dbo.get_field_name(field_description) AS field_db
-
-FROM [db_archive].[0222].[input_fields_list]
 
 
 
+--створюємо таблицю з генерованими назвами полів
 CREATE TABLE [db_archive].[0222].[title] (
-F_1344633181 NVARCHAR(255) NOT NULL,
-F_335755275 NVARCHAR(255) NOT NULL,
-F_1553510724 NVARCHAR(255) NOT NULL,
-F450546908 NVARCHAR(255) NOT NULL,
+F_1344633181 NVARCHAR(MAX) NOT NULL,
+F_335755275 NVARCHAR(MAX) NOT NULL,
+F_1553510724 NVARCHAR(MAX) NOT NULL,
+F450546908 NVARCHAR(MAX) NOT NULL,
 F_147495489 DATETIME NOT NULL,
 F_746347891 DATETIME NOT NULL,
-F1309265006 NVARCHAR(255) NOT NULL,
-F_1491450060 NVARCHAR(255) NULL,
-F658655227 NVARCHAR(255) NULL,
-F_543914863 NVARCHAR(255) NULL
+F1309265006 NVARCHAR(MAX) NOT NULL,
+F_1491450060 NVARCHAR(MAX) NULL,
+F658655227 NVARCHAR(MAX) NULL,
+F_543914863 NVARCHAR(MAX) NULL
 )
 
 
-
-use db_archive
-go
+--вставляємо дані з іншого сервера
 INSERT INTO [db_archive].[0222].[title](
 F_1344633181
 ,F_335755275
@@ -73,3 +73,38 @@ select [template]
       ,[Юридична_адреса]
       ,[ЄДРПОУ]  from [SNEC-GZ-SSRS01].[GZ_Arh].[dbo].[0222]
 go
+
+
+
+
+SELECT TOP (1000) [template]
+,[organization code]
+,[organization]
+,[timestamp]
+,[last update]
+,[Status]
+,[N]
+,[Показник]
+,[Розмірність]
+,[Позначення]
+,[Група N1]
+,[Група N2]
+,[Група N3]
+,[Група N4]
+,[Поряд. N1]
+,[Поряд. N2]
+,[Поряд. N3]
+,[Поряд. N4]
+,[Поряд. N5]
+,[Поряд. N6]
+,[Поряд. N7]
+,[Поряд. N8]
+,[Поряд. N9]
+,[Поряд. N10]
+,[Поряд. N11]
+,[Поряд. N12]
+,[Поряд. N13]
+,[ПВК]
+,[Всього]
+,[TableType]
+  FROM [GZ_Arh].[dbo].[15506]

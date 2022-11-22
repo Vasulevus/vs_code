@@ -47,9 +47,9 @@ begin
                 ,[VSP_PN_ТUОМ]
                 ,[PN_ТUОМ_vsoho]
             FROM 
-                [777].[254414212_output_form_' + @date_for + '] AS N -- замісь дати вставити змінну 
+                [db_depositarium].[777].[254414212_output_form_' + @date_for + '] AS N -- замісь дати вставити змінну 
             JOIN 
-                [777].[1232856512_output_form_' + @date_for + '] AS S -- замісь дати вставити змінну
+                [db_depositarium].[777].[1232856512_output_form_' + @date_for + '] AS S -- замісь дати вставити змінну
             ON
                 S.[npp] = N.[npp]) AS L1
 			ORDER BY Sorted'

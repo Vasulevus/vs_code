@@ -7,14 +7,14 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 
-CREATE OR ALTER PROCEDURE [777].[479556726_output_form]
+CREATE OR ALTER PROCEDURE [777].[479556726_output_form_flat]
 (
 @date_for nvarchar(max)--створюємо змінну
 )
 AS
 BEGIN
     DECLARE @SQL NVARCHAR(MAX)
-    SET @date_for = '2022-11-01' --лише для тестування, пізніше закоментити або видалити
+    --SET @date_for = '2022-11-01' --лише для тестування, пізніше закоментити або видалити
 
     IF OBJECT_ID('[db_depositarium].[777].[output_form3_' + @date_for + ']') IS NULL --перевіряємо, чи відсутній об'єкт
 
@@ -23,12 +23,12 @@ BEGIN
         DROP TABLE IF EXISTS #TempTable1_For_Additional_Calc;
 
         SELECT
-            [IF1].[F931084159] AS [П.н.]
-            ,[IF1].[F_58852227] AS [Показник]
-            ,[IF1].[F_360781186] AS [ВОУ Пн ТУОМ]
-            ,[IF2].[F1920758396]AS [ВСП Пн ТУОМ] 
-            ,[IF3].[F_360781186] AS [ВОУ Пд ТУОМ]
-            ,[IF4].F_360781186 AS [ВСП Пд ТУОМ]
+            [IF1].[F931084159] AS [npp]
+            ,[IF1].[F_58852227] AS [indicators]
+            ,[IF1].[F_360781186] AS [VOU_PN_ТUOM]
+            ,[IF2].[F1920758396]AS [VSP_PN_TUOM] 
+            ,[IF3].[F_360781186] AS [VOU_PD_ТUOM]
+            ,[IF4].F_360781186 AS [VSP_PD_TUOM]
         INTO
             #TempTable1_For_Additional_Calc --створюємо базову тимчасову таблицю для групування всіх вхідних форм
         FROM 
@@ -42,26 +42,33 @@ BEGIN
         JOIN
             [777].[input_form4] AS IF4
             ON IF1.F931084159 = IF4.F931084159
-        WHERE [input_form1][date_for] = @date_for;
+        WHERE 
+			[IF1].[date_for] = @date_for
+		AND
+			[IF2].[date_for] = @date_for
+		AND
+			[IF3].[date_for] = @date_for
+		AND
+			[IF4].[date_for] = @date_for;
         --SELECT * FROM #TempTable1_For_Additional_Calc
         DROP TABLE IF EXISTS #TempTable2_With_All_Calc;
 
 	    SELECT
-            [П.н.]
-            ,[Показник]
-            ,[ВОУ Пн ТУОМ]
-            ,[ВСП Пн ТУОМ]
-            ,CASE WHEN [П.н.] IN (4, 5, 9, 11, 13, 14, 15, 16, 17, 18, 19, 20, 53, 63, 64) THEN 
-                TRY_CAST([ВОУ Пн ТУОМ] AS decimal(15,3)) + TRY_CAST([ВСП Пн ТУОМ] AS decimal(15,3))
+            [npp]
+            ,[indicators]
+            ,[VOU_PN_ТUOM]
+            ,[VSP_PN_TUOM]
+            ,CASE WHEN [npp] IN (4, 5, 9, 11, 13, 14, 15, 16, 17, 18, 19, 20, 53, 63, 64) THEN 
+                TRY_CAST([VOU_PN_ТUOM] AS decimal(15,3)) + TRY_CAST([VSP_PN_TUOM] AS decimal(15,3))
                 ELSE NULL END AS [Північний ТУОМ (всього)] --сума по Північному ТУОМУ лише по потрібних пунктах
-            ,[ВОУ Пд ТУОМ]
-            ,[ВСП Пд ТУОМ]
-            ,CASE WHEN [П.н.] IN (4, 5, 9, 11, 13, 14, 15, 16, 17, 18, 19, 20, 53, 63, 64) THEN 
-                TRY_CAST([ВОУ Пд ТУОМ] AS decimal(15,3)) + TRY_CAST([ВСП Пд ТУОМ] AS decimal(15,3))
+            ,[VOU_PD_ТUOM]
+            ,[VSP_PD_TUOM]
+            ,CASE WHEN [npp] IN (4, 5, 9, 11, 13, 14, 15, 16, 17, 18, 19, 20, 53, 63, 64) THEN 
+                TRY_CAST([VOU_PD_ТUOM] AS decimal(15,3)) + TRY_CAST([VSP_PD_TUOM] AS decimal(15,3))
                 ELSE NULL END AS [Південний ТУОМ (всього)] --сума по Південному ТУОМУ лише по потрібних пунктах
-            ,CASE WHEN [П.н.] IN (4, 5, 9, 11, 13, 14, 15, 16, 17, 18, 19, 20, 53, 63, 64) THEN 
-				TRY_CAST([ВОУ Пд ТУОМ] AS decimal(15,3)) + TRY_CAST([ВСП Пд ТУОМ] AS decimal(15,3)) +
-				TRY_CAST([ВОУ Пн ТУОМ] AS decimal(15,3)) + TRY_CAST([ВСП Пн ТУОМ] AS decimal(15,3))
+            ,CASE WHEN [npp] IN (4, 5, 9, 11, 13, 14, 15, 16, 17, 18, 19, 20, 53, 63, 64) THEN 
+				TRY_CAST([VOU_PD_ТUOM] AS decimal(15,3)) + TRY_CAST([VSP_PD_TUOM] AS decimal(15,3)) +
+				TRY_CAST([VOU_PN_ТUOM] AS decimal(15,3)) + TRY_CAST([VSP_PN_TUOM] AS decimal(15,3))
 				ELSE NULL END AS [Україна (всього)] --сума по Україні лише по потрібних пунктах
         INTO
             #TempTable2_With_All_Calc

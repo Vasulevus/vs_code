@@ -1,13 +1,16 @@
 USE db_archive;
-INSERT INTO dbo.list_makets VALUES ('41971', N'Структура балансу електроенергії та технологічних витрат електроенергії', N'Васильєв Олександр', N'Коваленко Артур')
 
+DECLARE 
+      @year NVARCHAR(50),
+      @month NVARCHAR(50)
+SET @year = '2021'
+SET @month = '05'
+IF OBJECT_ID('[db_depositarium].[16_enerho].[output_form3_' + @year +'_' + @month + ']') IS NULL
 
-UPDATE dbo.list_makets
-SET business_analyst_name = N'Коваленко Артур' WHERE schema_name = '41971';
-GO
-UPDATE dbo.list_makets
-SET data_analyst_name = N'Васильєв Олександр' WHERE schema_name = '41971';
-GO
+BEGIN
+EXEC   ( 'CREATE TABLE [db_depositarium].[16_enerho].[output_form3_' + @year +'_' + @month + '] (A INT NOT NULL)')
+PRINT 'DONE'
+END
+ELSE
 
-USE db_archive;
-CREATE SCHEMA [41971];
+SELECT 1
