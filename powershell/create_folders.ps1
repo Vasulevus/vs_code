@@ -6,7 +6,7 @@ IF (Test-Path $FolderPath){
     Write-Host "Folder Exists"
 #    Remove-Item $FolderPath -Recurse #розкоментити, щоб видалялася папка з усіма підпапками
 }ELSE{
-№    Write-Host "Folder Doesn`t Exists"
+#    Write-Host "Folder Doesn`t Exists"
     New-Item -ItemType Directory -Path $Path\$Folder #створюємо папку з назвою макета
 #    Set-Location $Path\$Folder ##розкоментити, щоб переміщуватися в новстворену папку
     New-Item -ItemType Directory -Path $Path\$Folder'\Excel' #створюємо додаткові стандартні папки
