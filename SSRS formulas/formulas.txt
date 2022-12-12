@@ -81,3 +81,10 @@ Parameters!Month.Value=11, "30")
 
 --ReportParameter
 = Parameters!Year.Value + Parameters!Month.Value + Parameters!Day.Value
+
+
+
+gcloud config set account student-01-3222c7d4c89f@qwiklabs.net
+
+
+https://storage.googleapis.com/qwiklabs-gcp-00-fba15d45a763/cat.jpg

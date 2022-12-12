@@ -1,28 +1,47 @@
-DECLARE @SQL nvarchar(max),
-@date_for nvarchar(max) = '20221131',
-@date_for_cut nchar(6)
+USE [db_archive]
+GO
+/****** Object:  StoredProcedure [16_enerho].[687815595_output_form]    Script Date: 12.12.2022 11:50:28 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- layout.number '16_enerho'
+-- out_level.code '16_lev1_all'
+-- out_template.conditional_name 'Відомість про технологічні порушення в  ТУОМ  НЕК «Укренерго»'
 
-			DROP TABLE IF EXISTS #Calenda
-			SELECT 
-				[Dates]
-			,[YM]
-			,RIGHT([Dates],2) AS [Day]
-			, MAX(RIGHT([Dates],2)) OVER (PARTITION BY [YM]) AS MAXDate
-			INTO #Calenda
-			FROM
-			(SELECT 
-				convert(nvarchar(MAX), cast(date_for as date) , 112) AS Dates,
-				LEFT(convert(nvarchar(MAX), cast(date_for as date) , 112),6) AS [YM]
 
-			FROM
-				[db_archive].[16_enerho].[input_form3]) AS DateA
+ALTER PROCEDURE [16_enerho].[687815595_output_form] 
+(
+@date_for nvarchar(max)--створюємо змінну
+)
+AS
+SET NOCOUNT ON
+BEGIN
+DECLARE @SQL nvarchar(max)
+,@date_for_cut NCHAR(6) = '202211'
+IF OBJECT_ID('[db_depositarium].[16_enerho].[687815595_output_form_' + @date_for + ']') IS NULL
 
-			SELECT * FROM #Calenda
-				
---			SET @date_for_cut = LEFT(@date_For,6);
+--[db_depositarium].[16_enerho].[output_form3_2022-01-01]
 
---			EXEC(@date_for_cut);
+      BEGIN
+            DROP TABLE IF EXISTS #Calenda
+            SELECT 
+                  [Dates]
+                  ,[YM]
+                  ,RIGHT([Dates],2) AS [Day]
+                  ,MAX(RIGHT([Dates],2)) OVER (PARTITION BY [YM]) AS MAXDate
+            INTO #Calenda
+            FROM
+                  (SELECT 
+                        convert(nvarchar(MAX), cast(date_for as date) , 112) AS Dates,
+                        LEFT(convert(nvarchar(MAX), cast(date_for as date) , 112),6) AS [YM]
 
+                  FROM
+                        [db_archive].[16_enerho].[input_form3]) AS DateA
+
+		--SELECT * FROM #Calenda; --тест
+
+		SELECT @date_for_cut = MAX([Dates]) FROM #Calenda WHERE LEFT([Dates],6) LIKE LEFT(@date_for,6);
             DROP TABLE IF EXISTS  #input_3_form;
             SELECT [date_for]
                   ,[company_name]
@@ -87,7 +106,7 @@ DECLARE @SQL nvarchar(max),
             UPDATE #input_3_form
             SET [F_591333549] = '6.36' WHERE [F_591333549]   = '6,36 (решта визначити не можливо)';
             
-            DROP TABLE IF EXISTS #M;
+             DROP TABLE IF EXISTS #M;
             
             SELECT 
                   [company_name]
@@ -108,15 +127,14 @@ DECLARE @SQL nvarchar(max),
             FROM 
                   #input_3_form AS M
             WHERE       
-				LEFT(convert(nvarchar(MAX), cast(date_for as date) , 112),6) <=  LEFT(@date_for,6)
+				LEFT(convert(nvarchar(MAX), cast(date_for as date) , 112),6) =  @date_for_cut
 				AND
-				LEFT(convert(nvarchar(MAX), cast(date_for as date) , 112),4) = YEAR(GETDATE())--місяць
+				LEFT(convert(nvarchar(MAX), cast(date_for as date) , 112),4) = YEAR(GETDATE())--Рік
             GROUP BY 
                   [company_name];
---		SELECT * FROM #M;
-		
+		            DROP TABLE IF EXISTS #G;
 
-            DROP TABLE IF EXISTS #G;
+
 
             SELECT 
                         [company_name]
@@ -138,15 +156,13 @@ DECLARE @SQL nvarchar(max),
             FROM 
                   #input_3_form AS G
            WHERE       
-				LEFT(convert(nvarchar(MAX), cast(date_for as date) , 112),6) <=  LEFT(@date_for,6)
+				LEFT(convert(nvarchar(MAX), cast(date_for as date) , 112),6) <=  @date_for_cut
 				AND
-				LEFT(convert(nvarchar(MAX), cast(date_for as date) , 112),4) = YEAR(GETDATE())--місяць
+				LEFT(convert(nvarchar(MAX), cast(date_for as date) , 112),4) = LEFT(@date_for_cut,4)--місяць
             GROUP BY 
                   [company_name];
 
-
-
-            DROP TABLE #input_3_form;
+							            DROP TABLE #input_3_form;
             DROP TABLE IF EXISTS #B;
 
             SELECT *
@@ -159,14 +175,12 @@ DECLARE @SQL nvarchar(max),
             SELECT * FROM #G
             ) AS B;
 
-            --SELECT * FROM #B;
 
-            DROP TABLE IF EXISTS #M;
+			            DROP TABLE IF EXISTS #M;
             DROP TABLE IF EXISTS #G;
 
             DROP TABLE IF EXISTS #P;
             
-            DROP TABLE IF EXISTS #F;
 
             SELECT 
                   [company_name]

@@ -1,4 +1,6 @@
-
+-- layout.number '777'
+-- out_level.code '777_lev2_Ukr'
+-- out_template.conditional_name 'tab1'
 CREATE OR ALTER   PROCEDURE [777].[479556726_output_form]
 (
 @date_for nvarchar(max)--створюємо змінну
