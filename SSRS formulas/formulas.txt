@@ -58,3 +58,26 @@ Parameters!Month.Value = 11,"грудня")
     "0" + CSTR(MONTH(TODAY()) - 1),
     CSTR(MONTH(TODAY()) - 1)
 )
+
+
+
+
+--Day
+= 
+Switch(
+Parameters!Month.Value=12, "31",
+Parameters!Month.Value=01, "31",
+Parameters!Month.Value=02, "28",
+Parameters!Month.Value=03, "31",
+Parameters!Month.Value=04, "30",
+Parameters!Month.Value=05, "31",
+Parameters!Month.Value=06, "30",
+Parameters!Month.Value=07, "31",
+Parameters!Month.Value=08, "31",
+Parameters!Month.Value=09, "30",
+Parameters!Month.Value=10,"31",
+Parameters!Month.Value=11, "30")
+
+
+--ReportParameter
+= Parameters!Year.Value + Parameters!Month.Value + Parameters!Day.Value

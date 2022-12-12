@@ -1,6 +1,6 @@
 USE [db_archive]
 GO
-/****** Object:  StoredProcedure [16_enerho].[687815595_output_form]    Script Date: 10.11.2022 14:57:44 ******/
+/****** Object:  StoredProcedure [16_enerho].[687815595_output_form]    Script Date: 12.12.2022 11:50:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -22,7 +22,7 @@ AS
 SET NOCOUNT ON
 BEGIN
 DECLARE @SQL nvarchar(max)
-IF OBJECT_ID('[db_depositarium].[16_enerho].[output_form3_' + @date_for + ']') IS NULL
+IF OBJECT_ID('[db_depositarium].[16_enerho].[687815595_output_form_' + @date_for + ']') IS NULL
 
 --[db_depositarium].[16_enerho].[output_form3_2022-01-01]
 
@@ -111,7 +111,7 @@ IF OBJECT_ID('[db_depositarium].[16_enerho].[output_form3_' + @date_for + ']') I
             INTO #M
             FROM 
                   #input_3_form AS M
-            WHERE       convert(nvarchar(MAX), cast(date_for as date) , 112) =  @date_for  --місяць
+            WHERE       convert(nvarchar(MAX), cast(date_for as date) , 112) <=  @date_for  --місяць
             GROUP BY 
                   [company_name];
 
@@ -180,7 +180,7 @@ IF OBJECT_ID('[db_depositarium].[16_enerho].[output_form3_' + @date_for + ']') I
                   ,SUM([Відмови ІІ категорії з вини персоналу нак]) AS [II вина персоналу нак]
                   ,SUM([Відмови ІI категорії Недовідпуск тис.кВг год]) AS [II недовідпуск]
                   ,SUM([Відмови ІI категорії Недовідпуск тис.кВг год нак])  AS [II недовідпуск нак]
-				  ,ROW_NUMBER() OVER(ORDER BY [company_name]) AS Number_Of_Row
+
             INTO #P
             FROM #B
             GROUP BY [company_name];
@@ -203,25 +203,47 @@ IF OBJECT_ID('[db_depositarium].[16_enerho].[output_form3_' + @date_for + ']') I
                   ,SUM([Відмови ІІ категорії з вини персоналу нак]) AS [II вина персоналу нак]
                   ,SUM([Відмови ІI категорії Недовідпуск тис.кВг год]) AS [II недовідпуск]
                   ,SUM([Відмови ІI категорії Недовідпуск тис.кВг год нак])  AS [II недовідпуск нак]
-				  , 5 AS Number_Of_Row
             INTO #F
             FROM #B;
 
+			DROP TABLE IF EXISTS #Q;
+
+			SELECT *
+			INTO #Q
+			FROM
+            (SELECT * 
+            FROM #P
+            UNION ALL
+            SELECT *
+            FROM #F) AS GRIM;
+
+			SELECT 
+				[company_name]
+				,[I всього] AS [F_1483422437]
+				,[I всього нак] AS [F1493600066]
+				,[I вина персоналу] AS [F_1900265575]
+				,[I вина персоналу нак] AS [F_59656269]
+				,[I недовідпуск] AS [F_900885895]
+				,[I недовідпуск нак] AS [F522876730]
+				,[II всього] AS [F_789359902]
+				,[II всього нак] AS [F1655390479]
+				,[II вина персоналу] AS [F1652551633]
+				,[II вина персоналу нак] AS [F_1662192221]
+				,[II недовідпуск] AS [F1250546635]
+				,[II недовідпуск нак] AS [F_1273454092]
+				,ROW_NUMBER() OVER (ORDER BY company_name DESC) AS [F_1060990867]
+			INTO #Z
+			FROM #Q;
 
       EXEC('      SELECT *
-            INTO [db_depositarium].[16_enerho].[output_form3_' + @date_for + '] 
-            FROM(
-
-            SELECT * FROM #P
-            UNION ALL
-            SELECT * FROM #F
-
-            ) AS Z ');
+            INTO [db_depositarium].[16_enerho].[687815595_output_form_' + @date_for + '] 
+            FROM #Z WHERE [F_1483422437] IS NOT NULL
+			AND [F_789359902] IS NOT NULL');
 
 
-            SET @SQL=' SELECT * FROM [db_depositarium].[16_enerho].[output_form3_' + @date_for + ']'
+            SET @SQL=' SELECT * FROM [db_depositarium].[16_enerho].[687815595_output_form_' + @date_for + ']'
             EXECUTE sp_executesql  @SQL
       END;
-	              SET @SQL=' SELECT * FROM [db_depositarium].[16_enerho].[output_form3_' + @date_for + ']'
+	              SET @SQL=' SELECT * FROM [db_depositarium].[16_enerho].[687815595_output_form_' + @date_for + ']'
             EXECUTE sp_executesql  @SQL
 END
