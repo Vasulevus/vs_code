@@ -83,8 +83,27 @@ Parameters!Month.Value=11, "30")
 = Parameters!Year.Value + Parameters!Month.Value + Parameters!Day.Value
 
 
+--перемикання кольорів
+=IIf(Fields!company_name.Value = "Північне ТУОМ (всього)", "LightBlue", IIf(Fields!company_name.Value = "Південне ТУОМ (всього)", "LightBlue",IIF(Fields!company_name.Value = "Україна", "DarkSeaGreen", "Khaki")))
 
-gcloud config set account student-01-3222c7d4c89f@qwiklabs.net
 
 
-https://storage.googleapis.com/qwiklabs-gcp-00-fba15d45a763/cat.jpg
+--місяць
+= IIF(
+    MONTH(TODAY()) = 1,
+    "12",
+    IIF(
+        LEN(
+            CSTR(MONTH(TODAY()) - 1)
+        ) = 1,
+        "0" + CSTR(MONTH(TODAY()) - 1),
+        CSTR(MONTH(TODAY()) - 1)
+    )
+)
+
+--рік
+= IIF(
+    MONTH(TODAY()) = 1,
+    YEAR(TODAY())-1,
+    YEAR(TODAY())
+)

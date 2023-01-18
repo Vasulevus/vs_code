@@ -1,6 +1,6 @@
 USE [db_archive]
 GO
-/****** Object:  StoredProcedure [16_enerho].[687815595_output_form]    Script Date: 12.12.2022 11:50:28 ******/
+/****** Object:  StoredProcedure [16_enerho].[687815595_output_form]    Script Date: 13.12.2022 9:25:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15,18 +15,38 @@ ALTER PROCEDURE [16_enerho].[687815595_output_form]
 @date_for nvarchar(max)--створюємо змінну
 )
 AS
-
-
-
-
 SET NOCOUNT ON
 BEGIN
 DECLARE @SQL nvarchar(max)
+,@date_for_cut NCHAR(6) = '202211'
 IF OBJECT_ID('[db_depositarium].[16_enerho].[687815595_output_form_' + @date_for + ']') IS NULL
 
 --[db_depositarium].[16_enerho].[output_form3_2022-01-01]
 
       BEGIN
+--SET @date_for = (@date_f)
+DROP TABLE IF EXISTS #Calenda
+            SELECT 
+                  [Dates]
+                  ,[YM]
+                  ,RIGHT([Dates],2) AS [Day]
+                  ,MAX(RIGHT([Dates],2)) OVER (PARTITION BY [YM]) AS MAXDate
+            INTO #Calenda
+            FROM
+                  (SELECT 
+                        convert(nvarchar(MAX), cast(date_for as date) , 112) AS Dates,
+                        LEFT(convert(nvarchar(MAX), cast(date_for as date) , 112),6) AS [YM]
+
+                  FROM
+                        [db_archive].[16_enerho].[input_form3]) AS DateA
+
+		SELECT @date_for_cut = LEFT(@date_for,6);
+--		SELECT * FROM #Calenda; --тест
+
+--		SELECT  MAX([Dates]) FROM #Calenda WHERE [YM] LIKE LEFT(@date_for,6);
+		SELECT @date_for_cut;
+
+
             DROP TABLE IF EXISTS  #input_3_form;
             SELECT [date_for]
                   ,[company_name]
@@ -92,6 +112,7 @@ IF OBJECT_ID('[db_depositarium].[16_enerho].[687815595_output_form_' + @date_for
             SET [F_591333549] = '6.36' WHERE [F_591333549]   = '6,36 (решта визначити не можливо)';
             
             DROP TABLE IF EXISTS #M;
+			DROP TABLE IF EXISTS #G;
             
             SELECT 
                   [company_name]
@@ -101,7 +122,6 @@ IF OBJECT_ID('[db_depositarium].[16_enerho].[687815595_output_form_' + @date_for
                   , 0 AS [Відмови І категорії з вини персоналу нак]
                   ,SUM(CAST([F_388169605]AS FLOAT)) AS [Відмови І категорії Недовідпуск тис.кВг год] 
                   , 0 AS [Відмови І категорії Недовідпуск тис.кВг год нак] 
-
                   ,SUM(CAST([F_95506163]AS INT)) AS [Відмови ІI категорії всього]
                   ,0 AS [Відмови ІI категорії всього нак]
                   ,SUM(CAST([F_1948051532]AS INT)) AS [Відмови ІІ категорії з вини персоналу]
@@ -111,13 +131,14 @@ IF OBJECT_ID('[db_depositarium].[16_enerho].[687815595_output_form_' + @date_for
             INTO #M
             FROM 
                   #input_3_form AS M
-            WHERE       convert(nvarchar(MAX), cast(date_for as date) , 112) <=  @date_for  --місяць
-            GROUP BY 
+            WHERE
+			LEFT(convert(nvarchar(MAX), cast(date_for as date) , 112),6) = ( SELECT MAX(LEFT(convert(nvarchar(MAX), cast(date_for as date) , 112),6)) FROM #input_3_form WHERE LEFT(convert(nvarchar(MAX), cast(date_for as date) , 112),6) <= @date_for_cut)
+			 GROUP BY 
                   [company_name];
 
 
 
-            DROP TABLE IF EXISTS #G;
+
 
             SELECT 
                         [company_name]
@@ -138,13 +159,16 @@ IF OBJECT_ID('[db_depositarium].[16_enerho].[687815595_output_form_' + @date_for
             INTO #G
             FROM 
                   #input_3_form AS G
-            WHERE convert(nvarchar(MAX), cast(date_for as date) , 112) >= @date_for AND convert(nvarchar(MAX), cast(date_for as date) , 112) <= @date_for
+           WHERE       
+				LEFT(convert(nvarchar(MAX), cast(date_for as date) , 112),6) <=  @date_for_cut
+				AND
+				LEFT(convert(nvarchar(MAX), cast(date_for as date) , 112),4) = LEFT(@date_for_cut,4)--місяць
             GROUP BY 
                   [company_name];
 
 
 
-            DROP TABLE #input_3_form;
+						DROP TABLE #input_3_form;
             DROP TABLE IF EXISTS #B;
 
             SELECT *
@@ -157,14 +181,11 @@ IF OBJECT_ID('[db_depositarium].[16_enerho].[687815595_output_form_' + @date_for
             SELECT * FROM #G
             ) AS B;
 
-            --SELECT * FROM #B;
 
-            DROP TABLE IF EXISTS #M;
+			DROP TABLE IF EXISTS #M;
             DROP TABLE IF EXISTS #G;
-
             DROP TABLE IF EXISTS #P;
             
-            DROP TABLE IF EXISTS #F;
 
             SELECT 
                   [company_name]
@@ -185,10 +206,7 @@ IF OBJECT_ID('[db_depositarium].[16_enerho].[687815595_output_form_' + @date_for
             FROM #B
             GROUP BY [company_name];
 
-            DROP TABLE IF EXISTS #F;
-
-            
-
+			            INSERT INTO #P
             SELECT 
                   'Всього по НЕК' AS [company_name]
                   ,SUM([Відмови І категорії всього]) AS [I всього]
@@ -203,20 +221,14 @@ IF OBJECT_ID('[db_depositarium].[16_enerho].[687815595_output_form_' + @date_for
                   ,SUM([Відмови ІІ категорії з вини персоналу нак]) AS [II вина персоналу нак]
                   ,SUM([Відмови ІI категорії Недовідпуск тис.кВг год]) AS [II недовідпуск]
                   ,SUM([Відмови ІI категорії Недовідпуск тис.кВг год нак])  AS [II недовідпуск нак]
-            INTO #F
-            FROM #B;
+            FROM #B
 
+
+
+
+
+--			SELECT * FROM #P WHERE [I всього нак] IS NOT NULL AND [II всього нак] IS NOT NULL;
 			DROP TABLE IF EXISTS #Q;
-
-			SELECT *
-			INTO #Q
-			FROM
-            (SELECT * 
-            FROM #P
-            UNION ALL
-            SELECT *
-            FROM #F) AS GRIM;
-
 			SELECT 
 				[company_name]
 				,[I всього] AS [F_1483422437]
@@ -232,18 +244,24 @@ IF OBJECT_ID('[db_depositarium].[16_enerho].[687815595_output_form_' + @date_for
 				,[II недовідпуск] AS [F1250546635]
 				,[II недовідпуск нак] AS [F_1273454092]
 				,ROW_NUMBER() OVER (ORDER BY company_name DESC) AS [F_1060990867]
-			INTO #Z
-			FROM #Q;
+			INTO #Q
+			FROM #P;
+                  SELECT * FROM #Q
 
-      EXEC('      SELECT *
+
+            EXEC('      SELECT *
             INTO [db_depositarium].[16_enerho].[687815595_output_form_' + @date_for + '] 
-            FROM #Z WHERE [F_1483422437] IS NOT NULL
+            FROM #Q WHERE [F_1483422437] IS NOT NULL
 			AND [F_789359902] IS NOT NULL');
 
 
             SET @SQL=' SELECT * FROM [db_depositarium].[16_enerho].[687815595_output_form_' + @date_for + ']'
             EXECUTE sp_executesql  @SQL
-      END;
-	              SET @SQL=' SELECT * FROM [db_depositarium].[16_enerho].[687815595_output_form_' + @date_for + ']'
-            EXECUTE sp_executesql  @SQL
+            END;
+      SET @SQL=' SELECT * FROM [db_depositarium].[16_enerho].[687815595_output_form_' + @date_for + ']'
+      EXECUTE sp_executesql  @SQL
 END
+
+
+
+-------

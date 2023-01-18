@@ -1,5 +1,5 @@
 $Path = 'C:\Users\Asus\Documents\Work\'#змінна для шляху
-$Folder = '0155' #змінна для назви макету/тека
+$Folder = 'Звіт для ЗМІ - Постанова 835' #змінна для назви макету/тека
 $Slash = "\"
 $FolderPath = $Path + $Folder + $Slash
 $Historic_path = $FolderPath + 'Historic_Data' + $Slash
@@ -17,8 +17,8 @@ IF (Test-Path $FolderPath){
     New-Item -ItemType Directory -Path $FolderPath'\SSIS'
     New-Item -ItemType Directory -Path $FolderPath'\Archive'
     New-Item -ItemType Directory -Path $Historic_path
-    New-Item -ItemType Directory -Path $FolderPath'\CSV'
-    New-Item -ItemType Directory -Path $FolderPath'\DOCS'
+#    New-Item -ItemType Directory -Path $FolderPath'\CSV'
+    New-Item -ItemType Directory -Path $FolderPath'\PRD'
 #    Set-Location $Historic_path #розкоментити, щоб переміщуватися в новстворену теку
     New-Item -ItemType Directory -Path $Historic_path'CSV' #створюємо додаткові стандартні теки
     New-Item -ItemType Directory -Path $Historic_path'EXCEL'

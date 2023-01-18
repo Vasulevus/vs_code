@@ -23,7 +23,6 @@ IF OBJECT_ID('[db_depositarium].[16_enerho].[687815595_output_form_' + @date_for
 
 --[db_depositarium].[16_enerho].[output_form3_2022-01-01]
 
-      BEGIN
 --SET @date_for = (@date_f)
 DROP TABLE IF EXISTS #Calenda
             SELECT 
@@ -246,22 +245,28 @@ DROP TABLE IF EXISTS #Calenda
 				,ROW_NUMBER() OVER (ORDER BY company_name DESC) AS [F_1060990867]
 			INTO #Q
 			FROM #P;
-                  SELECT * FROM #Q
+
+IF @gen_table = 1 and OBJECT_ID(concat('[db_depositarium].[16_enerho].[1296965689_output_form_',  @date_for, ']')) IS NULL 
+            begin
+
+                    EXEC('      SELECT *
+                    INTO [db_depositarium].[16_enerho].[687815595_output_form_' + @date_for + '] 
+                    FROM #Q WHERE [F_1483422437] IS NOT NULL
+                    AND [F_789359902] IS NOT NULL');
 
 
-            EXEC('      SELECT *
-            INTO [db_depositarium].[16_enerho].[687815595_output_form_' + @date_for + '] 
-            FROM #Q WHERE [F_1483422437] IS NOT NULL
-			AND [F_789359902] IS NOT NULL');
+                    SET @SQL=' SELECT * FROM [db_depositarium].[16_enerho].[687815595_output_form_' + @date_for + ']'
+                    EXECUTE sp_executesql  @SQL
+            end
+-------------------------------
+else
+        begin
+
+                    SELECT * FROM #Q
+
+        end
+
+    END
 
 
-            SET @SQL=' SELECT * FROM [db_depositarium].[16_enerho].[687815595_output_form_' + @date_for + ']'
-            EXECUTE sp_executesql  @SQL
-            END;
-      SET @SQL=' SELECT * FROM [db_depositarium].[16_enerho].[687815595_output_form_' + @date_for + ']'
-      EXECUTE sp_executesql  @SQL
-END
 
-
-
--------

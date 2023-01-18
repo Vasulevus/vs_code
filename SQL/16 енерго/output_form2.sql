@@ -434,3 +434,12 @@ BEGIN
             end
 
 end
+
+
+
+-----------------
+
+
+declare @gen_table bit= 0
+set @gen_table=@gen_table
+select @gen_table as gn

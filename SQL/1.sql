@@ -1,16 +1,78 @@
-USE db_archive;
-
-DECLARE 
-      @year NVARCHAR(50),
-      @month NVARCHAR(50)
-SET @year = '2021'
-SET @month = '05'
-IF OBJECT_ID('[db_depositarium].[16_enerho].[output_form3_' + @year +'_' + @month + ']') IS NULL
-
-BEGIN
-EXEC   ( 'CREATE TABLE [db_depositarium].[16_enerho].[output_form3_' + @year +'_' + @month + '] (A INT NOT NULL)')
-PRINT 'DONE'
-END
-ELSE
-
-SELECT 1
+		SELECT 
+			'' INSERT INTO #BBB SELECT [company_name]
+			  ,[1]
+			  ,[2]
+			  ,[3]
+			  ,[4]
+			  ,[5]
+			  ,[6]
+			  ,[7]
+			  ,[8]
+			  ,[9]
+			  ,[10]
+			  ,[11]
+			  ,[12]
+			  ,[13]
+			  ,[14]
+			  ,[15]
+			  ,[16]
+			  ,[17]
+			  ,[18]
+			  ,[19]
+			  ,[20]
+			  ,[21]
+			  ,[22]
+			  ,[23]
+			  ,[24]
+			  ,[25]
+			  ,[26]
+			  ,[27]
+			  ,[28]
+			  ,[29]
+			  ,[30]
+			  ,[31]
+			  ,[32]
+			  ,[33]
+			  ,[34]
+			  ,[35]
+			  ,[36]
+			  ,[37]
+			  ,[38]
+			  ,[39]
+			  ,[40]
+			  ,[41]
+			  ,[42]
+			  ,[43]
+			  ,[44]
+			  ,[45]
+			  ,[46]
+			  ,[47]
+			  ,[48]
+			  ,[49]
+			  ,[50]
+			  ,[51]
+			  ,[52]
+			  ,[53]
+			  ,[54]
+			  ,[55]
+			  ,[56]
+			  ,[57]
+			  ,[58]
+			  ,[59]
+			  ,[60]
+			  ,[61]
+			  ,[62]
+			  ,[63]
+			  ,[64] FROM [db_depositarium].['+ @schemaname + '].['' + T.[name] + '']'' AS [TABLES]  -- формуємо запит для видалення всередині таблиці  
+		FROM
+			sys.tables AS T  
+		JOIN
+			sys.schemas AS S  
+		ON
+			T.schema_id = S.schema_id 
+		WHERE
+			T.name LIKE ''%' + @date_for_cut + '%''
+		AND
+			T.name NOT LIKE ''%_flat''
+		AND
+			CAST(S.name AS NVARCHAR(MAX)) = CAST(' + @schemaname + 'AS NVARCHAR(MAX))
