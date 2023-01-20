@@ -7,4 +7,4 @@ IF (Test-Path $FolderPath){
 #    Remove-Item $FolderPath -Recurse #розкоментити, щоб видалялася папка з усіма підпапками
 }ELSE{
     Write-Host "Folder Doesn`t Exists"
-}
+}R

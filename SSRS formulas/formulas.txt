@@ -100,6 +100,22 @@ Parameters!Month.Value=11, "30")
         CSTR(MONTH(TODAY()) - 1)
     )
 )
+-- назва місяця
+=Switch(
+Parameters!Month.Value=12, "грудень",
+Parameters!Month.Value=01, "січень",
+Parameters!Month.Value=02, "лютий",
+Parameters!Month.Value=03, "березень",
+Parameters!Month.Value=04, "квітень",
+Parameters!Month.Value=05, "травень",
+Parameters!Month.Value=06, "червень",
+Parameters!Month.Value=07, "липень",
+Parameters!Month.Value=08, "серпень",
+Parameters!Month.Value=09, "вересень",
+Parameters!Month.Value=10,"жовтень",
+Parameters!Month.Value=11,"листопад")
+
+
 
 --рік
 = IIF(
