@@ -1,0 +1,44 @@
+USE [test_db]
+GO
+/****** Object:  UserDefinedFunction [dbo].[get_field_name]    Script Date: 23.09.2022 17:49:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE FUNCTION [dbo].[get_field_name]
+(
+    @str Nvarchar(MAX)
+)
+RETURNS Nvarchar(MAX)
+AS
+BEGIN
+	DECLARE @outputValue nVarchar(MAX)
+	DECLARE @global_id_for_field_in_storage nVarchar(MAX)
+	
+	SET @outputValue=N''
+	
+	set @outputValue = REPLACE(@str, char(9), N'') --skip TAB
+	set @outputValue = REPLACE(REPLACE(@outputValue, CHAR(13), N''), CHAR(10), N'')
+	set @outputValue = REPLACE(@outputValue, N' ',N'') --skip space
+
+	/*
+	SELECT CHECKSUM('По всіх споживачах, з якими проведені розрахунки 
+	Нараховано коштів за 
+	реакт. ел. ен. 
+	всього   нараховано
+	коштів (без ПДВ)') as z;
+	select replace(replace('!	asd !', char(9), N''),N' ',N'') as z;
+	*/
+
+	set @outputValue = CONCAT('F', REPLACE(CHECKSUM(@outputValue),'-','_'))
+/*	
+	select TOP 1 @global_id_for_field_in_storage=dbo.field_storage.field_name 
+	from dbo.field_storage 
+	where dbo.field_storage.field_name=@outputValue
+		IF (@global_id_for_field_in_storage is NULL)
+		BEGIN
+			insert into dbo.field_storage (field_name,field_description) values (@outputValue, @str)
+		END
+*/		
+	RETURN @outputValue
+end
